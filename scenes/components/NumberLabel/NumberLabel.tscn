@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bxe2yr7j7bayj"]
 
-[ext_resource type="Script" uid="uid://d08thc1ouaumj" path="res://scenes/components/number_label.gd" id="1_5okxj"]
+[ext_resource type="Script" uid="uid://d08thc1ouaumj" path="res://scenes/components/NumberLabel/number_label.gd" id="1_5okxj"]
 [ext_resource type="Theme" uid="uid://b12lmh4bbtssq" path="res://themes/default.tres" id="2_caako"]
 
 [node name="NumberLabel" type="Node2D"]

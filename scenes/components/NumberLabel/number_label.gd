@@ -48,12 +48,18 @@ func _update_step():
 		await get_tree().create_timer(0.5).timeout
 		value += _accumulated_change
 		update_label()
+		_tween_value_label_color()
 		$DeltaLabel.text = ""
 		$DeltaLabel.visible = false
 		value_update_finished.emit(value, _accumulated_change)
 		_accumulated_change = 0
 		_is_animating = false
 		_time_since_last_update = 0.0
+
+func _tween_value_label_color():
+	var tween = create_tween()
+	$ValueLabel.modulate = Color.YELLOW
+	tween.tween_property($ValueLabel, "modulate", Color.WHITE, 0.3)
 
 func update_label():
 	$ValueLabel.text = str(value)
