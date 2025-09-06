@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This is a godot4 game project following best practices for architecture, patterns, and testing.
 
 # Architecture Patterns
 
@@ -22,22 +22,10 @@ All implementations follow the TDD approach.
 - Pattern: `const CELL_SIZE_RATIO: float = 0.018  # 1.8% of screen width`
 - Calculate actual sizes: `screen_size.x * CELL_SIZE_RATIO`
 
-## Layout Timing
-- Wait for proper layout before calculations using `await get_tree().process_frame`
-- Pattern for deferred setup:
-```gdscript
-func _ready() -> void:
-    # Setup non-layout dependent things
-    await get_tree().process_frame
-    await get_tree().process_frame
-    # Now do layout calculations
-```
-
 ## Godot Singletons
 - Register in project.godot: `GameManager="*res://core/game_manager.gd"`
 - Extend Node for signal capability
 - Global access pattern: `GameManager.method_name()`
-
 
 
 ## File Structure

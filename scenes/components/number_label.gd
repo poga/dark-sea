@@ -9,8 +9,10 @@ var _is_animating: bool = false
 var _time_since_last_update: float = 0.0
 var _max_step: int = 10
 
-signal value_update_started(current_value: int, delta: int)
-signal value_update_finished(final_value: int)
+signal delta_value_update_started(current_value: int, delta: int)
+signal delta_value_update_finished(final_value: int)
+signal delta_value_updated(delta: int)
+signal value_update_finished(final_value: int, total_delta: int)
 
 func _ready():
 	update_label()
@@ -39,17 +41,19 @@ func _update_step():
 	var prefix = "+" if _accumulated_change > 0 else ""
 	$DeltaLabel.text = prefix + str(_accumulated_change)
 	$DeltaLabel.visible = true
+	delta_value_updated.emit(step)
 
 	if _pending_change == 0:
+		delta_value_update_finished.emit(value)
 		await get_tree().create_timer(0.5).timeout
 		value += _accumulated_change
 		update_label()
 		$DeltaLabel.text = ""
 		$DeltaLabel.visible = false
+		value_update_finished.emit(value, _accumulated_change)
 		_accumulated_change = 0
 		_is_animating = false
 		_time_since_last_update = 0.0
-		value_update_finished.emit(value)
 
 func update_label():
 	$ValueLabel.text = str(value)
@@ -65,7 +69,7 @@ func add(amount: int):
 		_accumulated_change = 0
 		_is_animating = true
 
-	value_update_started.emit(value, amount)
+	delta_value_update_started.emit(value, amount)
 
 func subtract(amount: int):
 	add(-amount)
