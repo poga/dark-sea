@@ -14,6 +14,10 @@ config/name="game-template"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+GameManager="*res://core/game_manager.gd"
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
