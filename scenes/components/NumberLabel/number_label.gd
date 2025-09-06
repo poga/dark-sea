@@ -17,7 +17,7 @@ signal value_update_finished(final_value: int, total_delta: int)
 func _ready():
 	update_label()
 
-	add(-999999)
+	add(999999)
 
 func _process(delta):
 	if not _is_animating or _pending_change == 0:
@@ -45,6 +45,7 @@ func _update_step():
 
 	if _pending_change == 0:
 		delta_value_update_finished.emit(value)
+		_tween_delta_label_fade_out()
 		await get_tree().create_timer(0.5).timeout
 		value += _accumulated_change
 		update_label()
@@ -55,6 +56,17 @@ func _update_step():
 		_accumulated_change = 0
 		_is_animating = false
 		_time_since_last_update = 0.0
+
+func _tween_delta_label_fade_out():
+	var original_position = $DeltaLabel.position
+	var tween = create_tween()
+	tween.set_parallel(true)
+	tween.set_trans(Tween.TRANS_QUAD)
+	tween.tween_property($DeltaLabel, "modulate:a", 0.0, 0.5)
+	tween.tween_property($DeltaLabel, "position:x", original_position.x - 20, 0.5)
+	await tween.finished
+	$DeltaLabel.position = original_position
+	$DeltaLabel.modulate.a = 1.0
 
 func _tween_value_label_color():
 	var tween = create_tween()
