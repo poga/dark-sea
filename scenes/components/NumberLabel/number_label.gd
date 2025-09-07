@@ -45,6 +45,7 @@ func _update_step():
 
 	if _pending_change == 0:
 		delta_value_update_finished.emit(value)
+		await get_tree().create_timer(0.3).timeout
 		_tween_delta_label_fade_out()
 		await get_tree().create_timer(0.5).timeout
 		value += _accumulated_change
