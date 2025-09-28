@@ -28,3 +28,4 @@ offset_bottom = 108.0
 text = "+100"
 
 [connection signal="pressed" from="PlusOne" to="." method="_on_plus_one_pressed"]
+[connection signal="pressed" from="PlusHundred" to="." method="_on_plus_hundred_pressed"]
