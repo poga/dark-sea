@@ -13,6 +13,7 @@ theme = ExtResource("2_caako")
 text = "12345"
 
 [node name="DeltaLabel" type="Label" parent="."]
+visible = false
 offset_left = 88.0
 offset_right = 134.0
 offset_bottom = 35.0

@@ -1,94 +1,100 @@
 extends Node2D
 
 @export var value: int = 0
-@export var UPDATE_INTERVAL: float = 0.05
 
-var _pending_change: int = 0
-var _accumulated_change: int = 0
-var _is_animating: bool = false
-var _time_since_last_update: float = 0.0
-var _max_step: int = 10
+var _ui_value: int = 0  # Value shown in UI (lags behind real value)
+var _delta_accumulation: int = 0  # Accumulated delta changes
+var _damping_timer: float = 0.0
+var _damping_delay: float = 1.0
+var _current_tween: Tween
 
 signal delta_value_update_started(current_value: int, delta: int)
 signal delta_value_update_finished(final_value: int)
-signal delta_value_updated(delta: int)
 signal value_update_finished(final_value: int, total_delta: int)
 
 func _ready():
-	update_label()
-
-	add(999999)
+	_ui_value = value
+	update_ui_label()
 
 func _process(delta):
-	if not _is_animating or _pending_change == 0:
+	if _delta_accumulation == 0:
 		return
 
-	_time_since_last_update += delta
+	_damping_timer += delta
 
-	if _time_since_last_update < UPDATE_INTERVAL:
-		return
+	# Start fade animation after damping delay
+	if _damping_timer >= _damping_delay:
+		_start_fade_animation()
 
-	_time_since_last_update = 0.0
-	_update_step()
+func _start_fade_animation():
+	if _current_tween:
+		return  # Animation already running
 
-func _update_step():
-	var step = min(abs(_max_step), abs(_pending_change))
-	step *= sign(_pending_change)
+	delta_value_update_finished.emit(value)
 
-	_accumulated_change += step
-	_pending_change -= step
+	# Start fade animation
+	_current_tween = create_tween()
+	_current_tween.set_parallel(true)
+	_current_tween.set_trans(Tween.TRANS_QUAD)
 
-	var prefix = "+" if _accumulated_change > 0 else ""
-	$DeltaLabel.text = prefix + str(_accumulated_change)
-	$DeltaLabel.visible = true
-	delta_value_updated.emit(step)
-
-	if _pending_change == 0:
-		delta_value_update_finished.emit(value)
-		await get_tree().create_timer(0.3).timeout
-		value += _accumulated_change
-		update_label()
-		_tween_delta_label_fade_out()
-		await get_tree().create_timer(0.45).timeout
-		_tween_value_label_color()
-		$DeltaLabel.text = ""
-		$DeltaLabel.visible = false
-		value_update_finished.emit(value, _accumulated_change)
-		_accumulated_change = 0
-		_is_animating = false
-		_time_since_last_update = 0.0
-
-func _tween_delta_label_fade_out():
 	var original_position = $DeltaLabel.position
-	var tween = create_tween()
-	tween.set_parallel(true)
-	tween.set_trans(Tween.TRANS_QUAD)
-	tween.tween_property($DeltaLabel, "modulate:a", 0.0, 0.5)
-	tween.tween_property($DeltaLabel, "position:x", original_position.x - 20, 0.5)
-	await tween.finished
+	_current_tween.tween_property($DeltaLabel, "modulate:a", 0.0, 0.5)
+	_current_tween.tween_property($DeltaLabel, "position:x", original_position.x - 20, 0.5)
+
+	# Update UI value halfway through fade (0.25 seconds)
+	_current_tween.tween_callback(_update_ui_value_with_flash).set_delay(0.25)
+
+	await _current_tween.finished
+
+	# Clean up
 	$DeltaLabel.position = original_position
 	$DeltaLabel.modulate.a = 1.0
+	$DeltaLabel.text = ""
+	$DeltaLabel.visible = false
 
-func _tween_value_label_color():
-	var tween = create_tween()
+	value_update_finished.emit(value, _delta_accumulation)
+	_delta_accumulation = 0
+	_damping_timer = 0.0
+	_current_tween = null
+
+func _update_ui_value_with_flash():
+	# Update UI value to match real value
+	_ui_value = value
+	update_ui_label()
+
+	# Flash effect
+	var flash_tween = create_tween()
 	$ValueLabel.modulate = Color.YELLOW
-	tween.tween_property($ValueLabel, "modulate", Color.WHITE, 0.3)
+	flash_tween.tween_property($ValueLabel, "modulate", Color.WHITE, 0.3)
 
-func update_label():
-	$ValueLabel.text = str(value)
+func update_ui_label():
+	$ValueLabel.text = str(_ui_value)
 
 func add(amount: int):
-	_max_step = (abs(amount) / 10) + 1
-	_max_step *= sign(amount)
+	# 1. Update underlying value immediately
+	value += amount
 
-	if _is_animating:
-		_pending_change += amount
-	else:
-		_pending_change = amount
-		_accumulated_change = 0
-		_is_animating = true
+	# 2. Accumulate delta and show delta label
+	_delta_accumulation += amount
 
-	delta_value_update_started.emit(value, amount)
+	# Kill any existing tween and reset state
+	if _current_tween:
+		_current_tween.kill()
+		_current_tween = null
+
+	# Reset delta label to initial state
+	$DeltaLabel.modulate.a = 1.0
+	$DeltaLabel.position = Vector2(88, 0)
+
+	# Show delta label immediately
+	var prefix = "+" if _delta_accumulation > 0 else ""
+	$DeltaLabel.text = prefix + str(_delta_accumulation)
+	$DeltaLabel.visible = true
+
+	# Reset damping timer
+	_damping_timer = 0.0
+
+	delta_value_update_started.emit(_ui_value, amount)
 
 func subtract(amount: int):
 	add(-amount)
