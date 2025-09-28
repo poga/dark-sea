@@ -5,7 +5,7 @@ extends Node2D
 var _ui_value: int = 0  # Value shown in UI (lags behind real value)
 var _delta_accumulation: int = 0  # Accumulated delta changes
 var _damping_timer: float = 0.0
-var _damping_delay: float = 1.0
+var _damping_delay: float = 0.5
 var _current_tween: Tween
 
 signal delta_value_update_started(current_value: int, delta: int)
