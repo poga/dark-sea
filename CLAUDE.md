@@ -2,33 +2,33 @@
 
 This is a godot4 game project following best practices for architecture, patterns, and testing.
 
-# Architecture Patterns
+## Architecture Patterns
 
 All implementations follow the TDD approach.
 
-## Signal-Driven UI Updates
+### Signal-Driven UI Updates
 - Use Godot singletons for global game state management
 - Use scenes for interaction and rendering
 - Implement signals for reactive UI updates instead of polling
 - Pattern: GameManager singleton emits signals, UI scenes connect to signals
 
-## Scene Management
+### Scene Management
 - leverage Godot's scene hierarchy for rendering. Instantiate scenes and connect with signals for dynamic updates
 - Create reusable scene components
 - Use direct positioning for grid layouts instead of container layouts when precise control is needed
 
-## Screen-Relative Sizing
+### Screen-Relative Sizing
 - Use ratios relative to screen size for responsive layouts
 - Pattern: `const CELL_SIZE_RATIO: float = 0.018  # 1.8% of screen width`
 - Calculate actual sizes: `screen_size.x * CELL_SIZE_RATIO`
 
-## Godot Singletons
+### Godot Singletons
 - Register in project.godot: `GameManager="*res://core/game_manager.gd"`
 - Extend Node for signal capability
 - Global access pattern: `GameManager.method_name()`
 
 
-## File Structure
+### File Structure
 
 ```
 /
@@ -37,15 +37,17 @@ All implementations follow the TDD approach.
 ├── Makefile              # Build tasks (test command)
 ├── core/                 # Core game logic (data structures, no UI)
 │   ├── game_core.gd      # GameCore action processing system
-│   └── test_game_core.gd # GUT tests for GameCore
+│   └── tests/            # GUT tests for core logic
 ├── docs/
 │   ├── design.md         # Complete game design document
 │   └── tasks.md          # 20 milestone breakdown
+├── scenes/               # Game scenes (UI, rendering)
+├── themes/               # UI themes
 ├── .godot/               # Godot editor files (ignored)
 └── [future directories]  # view/, ui/, scenes/ will be added during development
 ```
 
-# Development
+## Development
 
 When developing tests:
 - **NEVER use mocks** - they are useless and hide real bugs. Test real behavior, real data, and real user interactions.
@@ -57,7 +59,10 @@ When developing:
 - don't make unnecessary changes to the codebase unless absolutely needed. Focus on implementing the requested features or fixes.
 - always add tests for changes, but follow the same principles: NO MOCKS, test real user behavior and actual functionality.
 
-### Testing
+## Testing
+
 Use `just test` to validate the implementation. All tests must pass before considering any implementation complete.
+
+Don't write one-time test scens to validate changes.
 
 For `just scene <scene_name>.tscn` you should always specify the scene filename you want to test instead of a directory
