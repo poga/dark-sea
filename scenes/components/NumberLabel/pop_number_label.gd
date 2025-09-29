@@ -11,6 +11,14 @@ func _ready():
 
 func update_label():
 	$ValueLabel.text = str(value)
+	# Recalculate pivot_offset to center of label based on actual text size
+	var label_size = $ValueLabel.get_theme_default_font().get_string_size(
+		$ValueLabel.text,
+		HORIZONTAL_ALIGNMENT_LEFT,
+		-1,
+		$ValueLabel.get_theme_default_font_size()
+	)
+	$ValueLabel.pivot_offset = label_size * 0.5
 
 func add(amount: int):
 	# Update value directly
