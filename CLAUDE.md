@@ -1,68 +1,32 @@
 # CLAUDE.md
 
-This is a godot4 game project following best practices for architecture, patterns, and testing.
+Godot 4 game template with TDD, signal-driven architecture, and reusable components.
 
-## Architecture Patterns
+## Quick Start
 
-All implementations follow the TDD approach.
-
-### Signal-Driven UI Updates
-- Use Godot singletons for global game state management
-- Use scenes for interaction and rendering
-- Implement signals for reactive UI updates instead of polling
-- Pattern: GameManager singleton emits signals, UI scenes connect to signals
-
-### Scene Management
-- leverage Godot's scene hierarchy for rendering. Instantiate scenes and connect with signals for dynamic updates
-- Create reusable scene components
-- Use direct positioning for grid layouts instead of container layouts when precise control is needed
-
-### Screen-Relative Sizing
-- Use ratios relative to screen size for responsive layouts
-- Pattern: `const CELL_SIZE_RATIO: float = 0.018  # 1.8% of screen width`
-- Calculate actual sizes: `screen_size.x * CELL_SIZE_RATIO`
-
-### Godot Singletons
-- Register in project.godot: `GameManager="*res://core/game_manager.gd"`
-- Extend Node for signal capability
-- Global access pattern: `GameManager.method_name()`
-
-
-### File Structure
-
-```
-/
-├── project.godot          # Godot project configuration
-├── icon.svg              # Project icon
-├── Makefile              # Build tasks (test command)
-├── core/                 # Core game logic (data structures, no UI)
-│   ├── game_core.gd      # GameCore action processing system
-│   └── tests/            # GUT tests for core logic
-├── docs/
-│   ├── design.md         # Complete game design document
-│   └── tasks.md          # 20 milestone breakdown
-├── scenes/               # Game scenes (UI, rendering)
-├── themes/               # UI themes
-├── .godot/               # Godot editor files (ignored)
-└── [future directories]  # view/, ui/, scenes/ will be added during development
+```bash
+just test                    # Run all tests (must pass before any PR)
+just scene <name>.tscn       # Run a specific scene
 ```
 
-## Development
+## Architecture
 
-When developing tests:
-- **NEVER use mocks** - they are useless and hide real bugs. Test real behavior, real data, and real user interactions.
-- Use actual implementations and real data structures. The goal is to test that software works for real users in real scenarios.
-- Test what users see and experience, not internal implementation details.
-- Write minimal tests that cover core functionality. Focus on user behavior, not code coverage.
+**Signal-driven updates**: GameManager singleton emits signals → UI scenes react.
+- Singletons in `core/` for state management
+- Scenes in `scenes/` for UI and rendering
+- Tests in `core/tests/` using GUT framework
 
-When developing:
-- don't make unnecessary changes to the codebase unless absolutely needed. Focus on implementing the requested features or fixes.
-- always add tests for changes, but follow the same principles: NO MOCKS, test real user behavior and actual functionality.
+Look at existing components in `scenes/components/` for patterns.
 
-## Testing
+## Development Rules
 
-Use `just test` to validate the implementation. All tests must pass before considering any implementation complete.
+**Testing**: NO MOCKS. Test real behavior with real data. All tests must pass.
 
-Don't write one-time test scens to validate changes.
+**Changes**: Minimal and focused. Don't refactor unless asked. Add tests for new code.
 
-For `just scene <scene_name>.tscn` you should always specify the scene filename you want to test instead of a directory
+## Conventions
+
+Find patterns by reading existing code:
+- `core/game_manager.gd` - singleton pattern, signal definitions
+- `scenes/components/NumberLabel/` - scene component patterns, tweens, exports
+- `core/tests/test_game_manager.gd` - test structure, signal watching
