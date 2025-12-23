@@ -2,10 +2,16 @@ extends Node2D
 
 @export var value: int = 0
 
+@export_group("Animation")
+@export var damping_delay: float = 0.5  ## Delay before fade animation starts
+@export var fade_duration: float = 0.5  ## How long delta label fades out
+@export var fade_offset: float = 20.0  ## How far delta label moves during fade
+@export var flash_color: Color = Color.YELLOW  ## Flash color on value update
+@export var flash_duration: float = 0.3  ## How long the flash lasts
+
 var _ui_value: int = 0  # Value shown in UI (lags behind real value)
 var _delta_accumulation: int = 0  # Accumulated delta changes
 var _damping_timer: float = 0.0
-var _damping_delay: float = 0.5
 var _current_tween: Tween
 
 signal delta_value_update_started(current_value: int, delta: int)
@@ -23,7 +29,7 @@ func _process(delta):
 	_damping_timer += delta
 
 	# Start fade animation after damping delay
-	if _damping_timer >= _damping_delay:
+	if _damping_timer >= damping_delay:
 		_start_fade_animation()
 
 func _start_fade_animation():
@@ -38,11 +44,11 @@ func _start_fade_animation():
 	_current_tween.set_trans(Tween.TRANS_QUAD)
 
 	var original_position = $DeltaLabel.position
-	_current_tween.tween_property($DeltaLabel, "modulate:a", 0.0, 0.5)
-	_current_tween.tween_property($DeltaLabel, "position:x", original_position.x - 20, 0.5)
+	_current_tween.tween_property($DeltaLabel, "modulate:a", 0.0, fade_duration)
+	_current_tween.tween_property($DeltaLabel, "position:x", original_position.x - fade_offset, fade_duration)
 
-	# Update UI value halfway through fade (0.25 seconds)
-	_current_tween.tween_callback(_update_ui_value_with_flash).set_delay(0.25)
+	# Update UI value halfway through fade
+	_current_tween.tween_callback(_update_ui_value_with_flash).set_delay(fade_duration * 0.5)
 
 	await _current_tween.finished
 
@@ -64,8 +70,8 @@ func _update_ui_value_with_flash():
 
 	# Flash effect
 	var flash_tween = create_tween()
-	$ValueLabel.modulate = Color.YELLOW
-	flash_tween.tween_property($ValueLabel, "modulate", Color.WHITE, 0.3)
+	$ValueLabel.modulate = flash_color
+	flash_tween.tween_property($ValueLabel, "modulate", Color.WHITE, flash_duration)
 
 func update_ui_label():
 	$ValueLabel.text = str(_ui_value)

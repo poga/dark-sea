@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://c8x3yr2j7bayj"]
 
-[ext_resource type="Script" uid="uid://dp667uqa5lcwj" path="res://scenes/components/NumberLabel/pop_number_label.gd" id="1_5okxj"]
+[ext_resource type="Script" uid="uid://dp667uqa5lcwj" path="res://scenes/NumberLabel/pop_number_label.gd" id="1_5okxj"]
 [ext_resource type="Theme" uid="uid://b12lmh4bbtssq" path="res://themes/default.tres" id="2_caako"]
 
 [node name="PopNumberLabel" type="Node2D"]

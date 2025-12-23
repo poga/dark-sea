@@ -2,6 +2,10 @@ extends Node2D
 
 @export var value: int = 0
 
+@export_group("Animation")
+@export var impact_scale: float = 1.5  ## Scale multiplier on value change
+@export var animation_duration: float = 0.5  ## How long the scale animation takes
+
 var _scale_tween: Tween
 
 signal value_updated(new_value: int)
@@ -43,6 +47,6 @@ func _create_impact_animation():
 	_scale_tween.set_ease(Tween.EASE_OUT)
 	_scale_tween.set_trans(Tween.TRANS_BACK)
 
-	# Scale up to 1.5x then back to 1.0 over 500ms
-	$ValueLabel.scale = Vector2(1.5, 1.5)
-	_scale_tween.tween_property($ValueLabel, "scale", Vector2(1.0, 1.0), 0.5)
+	# Scale up then back to 1.0
+	$ValueLabel.scale = Vector2(impact_scale, impact_scale)
+	_scale_tween.tween_property($ValueLabel, "scale", Vector2(1.0, 1.0), animation_duration)
