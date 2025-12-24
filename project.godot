@@ -20,7 +20,7 @@ GameManager="*res://core/game_manager.gd"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/brackeys_particle_controls/plugin.cfg", "res://addons/gut/plugin.cfg")
+enabled=PackedStringArray("res://addons/gut/plugin.cfg")
 
 [rendering]
 
