@@ -111,3 +111,23 @@ func _queue_log(level: String, message: String, data: Dictionary):
 		"data": data,
 		"ts": Time.get_unix_time_from_system()
 	})
+
+func increment(name: String, labels: Dictionary = {}, amount: int = 1):
+	_queue_metric("counter", name, amount, labels)
+
+func gauge(name: String, value: float, labels: Dictionary = {}):
+	_queue_metric("gauge", name, value, labels)
+
+func histogram(name: String, value: float, labels: Dictionary = {}):
+	_queue_metric("histogram", name, value, labels)
+
+func _queue_metric(type: String, name: String, value: float, labels: Dictionary):
+	if _metric_queue.size() >= MAX_QUEUE_SIZE:
+		_metric_queue.pop_front()
+	_metric_queue.append({
+		"type": type,
+		"name": name,
+		"value": value,
+		"labels": labels,
+		"ts": Time.get_unix_time_from_system()
+	})
