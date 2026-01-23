@@ -89,3 +89,25 @@ func _on_flush_timer():
 
 func _flush_all():
 	pass  # Implemented in later tasks
+
+func log_info(message: String, data: Dictionary = {}):
+	_queue_log("info", message, data)
+
+func log_warn(message: String, data: Dictionary = {}):
+	_queue_log("warn", message, data)
+
+func log_error(message: String, data: Dictionary = {}):
+	_queue_log("error", message, data)
+
+func log_debug(message: String, data: Dictionary = {}):
+	_queue_log("debug", message, data)
+
+func _queue_log(level: String, message: String, data: Dictionary):
+	if _log_queue.size() >= MAX_QUEUE_SIZE:
+		_log_queue.pop_front()
+	_log_queue.append({
+		"level": level,
+		"msg": message,
+		"data": data,
+		"ts": Time.get_unix_time_from_system()
+	})
