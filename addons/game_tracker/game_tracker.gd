@@ -1,5 +1,27 @@
 extends Node
 
+class Span:
+	var tracker: Node
+	var name: String
+	var trace_id: String
+	var span_id: String
+	var parent_span_id: String
+	var start_time: int
+	var attributes: Dictionary
+
+	func _init(p_tracker: Node, p_name: String, p_attrs: Dictionary, p_trace_id: String, p_span_id: String, p_parent_span_id: String):
+		tracker = p_tracker
+		name = p_name
+		attributes = p_attrs
+		trace_id = p_trace_id
+		span_id = p_span_id
+		parent_span_id = p_parent_span_id
+		start_time = Time.get_ticks_usec()
+
+	func end():
+		var end_time = Time.get_ticks_usec()
+		tracker._queue_trace(self, end_time)
+
 # Constants
 const MAX_QUEUE_SIZE := 100
 const FLUSH_INTERVAL := 5.0
@@ -130,4 +152,43 @@ func _queue_metric(type: String, name: String, value: float, labels: Dictionary)
 		"value": value,
 		"labels": labels,
 		"ts": Time.get_unix_time_from_system()
+	})
+
+func start_span(span_name: String, attributes: Dictionary = {}, parent: Span = null) -> Span:
+	var trace_id: String
+	var parent_span_id: String
+
+	if parent:
+		trace_id = parent.trace_id
+		parent_span_id = parent.span_id
+	else:
+		trace_id = _generate_trace_id()
+		parent_span_id = ""
+
+	var span_id = _generate_span_id()
+	return Span.new(self, span_name, attributes, trace_id, span_id, parent_span_id)
+
+func _generate_trace_id() -> String:
+	var id = ""
+	for i in range(32):
+		id += "0123456789abcdef"[randi() % 16]
+	return id
+
+func _generate_span_id() -> String:
+	var id = ""
+	for i in range(16):
+		id += "0123456789abcdef"[randi() % 16]
+	return id
+
+func _queue_trace(span: Span, end_time: int):
+	if _trace_queue.size() >= MAX_QUEUE_SIZE:
+		_trace_queue.pop_front()
+	_trace_queue.append({
+		"name": span.name,
+		"trace_id": span.trace_id,
+		"span_id": span.span_id,
+		"parent_span_id": span.parent_span_id,
+		"start_time": span.start_time,
+		"end_time": end_time,
+		"attributes": span.attributes
 	})
