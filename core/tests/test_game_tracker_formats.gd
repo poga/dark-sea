@@ -92,3 +92,66 @@ func test_prometheus_counter_has_total_suffix():
 			break
 
 	assert_true(name_label.value.ends_with("_total"))
+
+func test_format_otlp_payload():
+	var span = tracker.start_span("test_op", {"key": "value"})
+	span.end()
+
+	var payload = tracker._format_otlp_payload()
+
+	assert_true(payload.has("resourceSpans"))
+	assert_eq(payload.resourceSpans.size(), 1)
+
+	var resource_span = payload.resourceSpans[0]
+	assert_true(resource_span.has("resource"))
+	assert_true(resource_span.has("scopeSpans"))
+
+func test_otlp_resource_attributes():
+	var span = tracker.start_span("test_op")
+	span.end()
+
+	var payload = tracker._format_otlp_payload()
+	var attrs = payload.resourceSpans[0].resource.attributes
+
+	var attr_keys = []
+	for attr in attrs:
+		attr_keys.append(attr.key)
+
+	assert_true("service.name" in attr_keys)
+	assert_true("service.version" in attr_keys)
+
+func test_otlp_span_structure():
+	var span = tracker.start_span("level_load", {"level": "forest"})
+	span.end()
+
+	var payload = tracker._format_otlp_payload()
+	var otlp_span = payload.resourceSpans[0].scopeSpans[0].spans[0]
+
+	assert_eq(otlp_span.name, "level_load")
+	assert_true(otlp_span.has("traceId"))
+	assert_true(otlp_span.has("spanId"))
+	assert_true(otlp_span.has("startTimeUnixNano"))
+	assert_true(otlp_span.has("endTimeUnixNano"))
+	assert_true(otlp_span.has("attributes"))
+
+func test_otlp_nested_spans():
+	var parent = tracker.start_span("parent")
+	var child = tracker.start_span("child", {}, parent)
+	child.end()
+	parent.end()
+
+	var payload = tracker._format_otlp_payload()
+	var spans = payload.resourceSpans[0].scopeSpans[0].spans
+
+	assert_eq(spans.size(), 2)
+
+	# Find child span and verify parentSpanId
+	var child_span = null
+	for s in spans:
+		if s.name == "child":
+			child_span = s
+			break
+
+	assert_not_null(child_span)
+	assert_true(child_span.has("parentSpanId"))
+	assert_ne(child_span.parentSpanId, "")

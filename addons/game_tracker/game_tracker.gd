@@ -253,3 +253,45 @@ func _format_prometheus_payload() -> Dictionary:
 		})
 
 	return {"timeseries": timeseries}
+
+func _format_otlp_payload() -> Dictionary:
+	var spans := []
+
+	for trace in _trace_queue:
+		var attributes := []
+		for key in trace.attributes:
+			attributes.append({
+				"key": key,
+				"value": {"stringValue": str(trace.attributes[key])}
+			})
+
+		var span_data := {
+			"traceId": trace.trace_id,
+			"spanId": trace.span_id,
+			"name": trace.name,
+			"startTimeUnixNano": str(trace.start_time * 1000),  # usec to nsec
+			"endTimeUnixNano": str(trace.end_time * 1000),
+			"attributes": attributes
+		}
+
+		if trace.parent_span_id != "":
+			span_data["parentSpanId"] = trace.parent_span_id
+
+		spans.append(span_data)
+
+	return {
+		"resourceSpans": [{
+			"resource": {
+				"attributes": [
+					{"key": "service.name", "value": {"stringValue": _config.game}},
+					{"key": "service.version", "value": {"stringValue": _config.version}},
+					{"key": "deployment.environment", "value": {"stringValue": _config.environment}},
+					{"key": "session.id", "value": {"stringValue": _session_id}}
+				]
+			},
+			"scopeSpans": [{
+				"scope": {"name": "game_tracker", "version": "1.0.0"},
+				"spans": spans
+			}]
+		}]
+	}
