@@ -17,6 +17,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 GameManager="*res://core/game_manager.gd"
+GameTracker="*res://addons/game_tracker/game_tracker.gd"
 
 [editor_plugins]
 
