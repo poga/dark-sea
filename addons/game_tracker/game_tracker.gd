@@ -192,3 +192,38 @@ func _queue_trace(span: Span, end_time: int):
 		"end_time": end_time,
 		"attributes": span.attributes
 	})
+
+func _format_loki_payload() -> Dictionary:
+	# Group logs by level
+	var streams_by_level := {}
+
+	for log_entry in _log_queue:
+		var level = log_entry.level
+		if not streams_by_level.has(level):
+			streams_by_level[level] = []
+
+		var ts_ns = str(int(log_entry.ts * 1_000_000_000))
+		var log_data = {
+			"msg": log_entry.msg,
+			"data": log_entry.data,
+			"session_id": _session_id,
+			"user": _user,
+			"contexts": _contexts,
+			"tags": _tags,
+			"device": _device_context
+		}
+		streams_by_level[level].append([ts_ns, JSON.stringify(log_data)])
+
+	var streams := []
+	for level in streams_by_level:
+		streams.append({
+			"stream": {
+				"game": _config.game,
+				"env": _config.environment,
+				"version": _config.version,
+				"level": level
+			},
+			"values": streams_by_level[level]
+		})
+
+	return {"streams": streams}
