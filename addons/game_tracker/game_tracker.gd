@@ -54,6 +54,15 @@ func init(config: Dictionary):
 	_device_context = _collect_device_context()
 	_flush_timer.start()
 
+func set_user(user_data: Dictionary):
+	_user = user_data
+
+func set_context(name: String, data: Dictionary):
+	_contexts[name] = data
+
+func set_tag(key: String, value: String):
+	_tags[key] = value
+
 func _generate_session_id() -> String:
 	var uuid = ""
 	for i in range(32):
