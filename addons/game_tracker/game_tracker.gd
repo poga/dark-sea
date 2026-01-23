@@ -110,7 +110,54 @@ func _on_flush_timer():
 	_flush_all()
 
 func _flush_all():
-	pass  # Implemented in later tasks
+	_flush_logs()
+	_flush_metrics()
+	_flush_traces()
+
+func _flush_logs():
+	if _log_queue.is_empty():
+		return
+	if _config.endpoint == "":
+		_log_queue.clear()
+		return
+
+	var payload = _format_loki_payload()
+	_send_async(_config.endpoint + "/loki/api/v1/push", payload)
+	_log_queue.clear()
+
+func _flush_metrics():
+	if _metric_queue.is_empty():
+		return
+	if _config.endpoint == "":
+		_metric_queue.clear()
+		return
+
+	var payload = _format_prometheus_payload()
+	_send_async(_config.endpoint + "/api/v1/push", payload)
+	_metric_queue.clear()
+
+func _flush_traces():
+	if _trace_queue.is_empty():
+		return
+	if _config.endpoint == "":
+		_trace_queue.clear()
+		return
+
+	var payload = _format_otlp_payload()
+	_send_async(_config.endpoint + "/v1/traces", payload)
+	_trace_queue.clear()
+
+func _send_async(url: String, payload: Dictionary):
+	if _request_in_flight:
+		return  # Skip if previous request still pending
+
+	var json = JSON.stringify(payload)
+	var headers = ["Content-Type: application/json"]
+
+	_request_in_flight = true
+	var error = _http_request.request(url, headers, HTTPClient.METHOD_POST, json)
+	if error != OK:
+		_request_in_flight = false  # Reset on immediate failure
 
 func log_info(message: String, data: Dictionary = {}):
 	_queue_log("info", message, data)
