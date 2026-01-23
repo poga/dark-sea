@@ -52,3 +52,43 @@ func test_loki_payload_includes_context():
 
 	assert_eq(log_json.user.id, "player_1")
 	assert_eq(log_json.tags.build, "demo")
+
+func test_format_prometheus_payload():
+	tracker.increment("enemies_killed", {"level": "forest"}, 5)
+	tracker.gauge("player_health", 85, {"player_id": "p1"})
+
+	var payload = tracker._format_prometheus_payload()
+
+	# Prometheus remote write uses a specific structure
+	assert_true(payload.has("timeseries"))
+	assert_eq(payload.timeseries.size(), 2)
+
+func test_prometheus_metric_structure():
+	tracker.increment("test_counter", {"region": "us"})
+
+	var payload = tracker._format_prometheus_payload()
+	var ts = payload.timeseries[0]
+
+	# Should have labels array and samples array
+	assert_true(ts.has("labels"))
+	assert_true(ts.has("samples"))
+
+	# Labels should include __name__, game, env, and custom labels
+	var label_names = []
+	for label in ts.labels:
+		label_names.append(label.name)
+	assert_true("__name__" in label_names)
+	assert_true("game" in label_names)
+	assert_true("region" in label_names)
+
+func test_prometheus_counter_has_total_suffix():
+	tracker.increment("enemies_killed")
+
+	var payload = tracker._format_prometheus_payload()
+	var name_label = null
+	for label in payload.timeseries[0].labels:
+		if label.name == "__name__":
+			name_label = label
+			break
+
+	assert_true(name_label.value.ends_with("_total"))

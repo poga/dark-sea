@@ -227,3 +227,29 @@ func _format_loki_payload() -> Dictionary:
 		})
 
 	return {"streams": streams}
+
+func _format_prometheus_payload() -> Dictionary:
+	var timeseries := []
+
+	for metric in _metric_queue:
+		var metric_name = metric.name
+		if metric.type == "counter":
+			metric_name += "_total"
+
+		var labels := [
+			{"name": "__name__", "value": metric_name},
+			{"name": "game", "value": _config.game},
+			{"name": "env", "value": _config.environment},
+			{"name": "version", "value": _config.version},
+		]
+
+		for key in metric.labels:
+			labels.append({"name": key, "value": str(metric.labels[key])})
+
+		var ts_ms = int(metric.ts * 1000)
+		timeseries.append({
+			"labels": labels,
+			"samples": [{"value": metric.value, "timestamp": ts_ms}]
+		})
+
+	return {"timeseries": timeseries}
