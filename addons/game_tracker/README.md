@@ -176,6 +176,3 @@ func load_level(level_name: String):
     span.end()
 ```
 
-## License
-
-MIT
