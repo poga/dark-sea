@@ -3,29 +3,27 @@ extends Node2D
 @export var value: int = 0
 
 @export_group("Animation")
-@export var impact_scale: float = 1.5  ## Scale multiplier on value change
-@export var animation_duration: float = 0.5  ## How long the scale animation takes
+@export var impact_scale: float = 1.5  ## Base scale multiplier on value change
+@export var scale_variation: float = 0.4  ## ±40% randomness on scale
+@export var max_rotation_degrees: float = 20.0  ## Max rotation in either direction
+@export var animation_duration: float = 0.15  ## How long the settle animation takes
 
-var _scale_tween: Tween
+var _tween: Tween
 
 signal value_updated(new_value: int)
 
 func _ready():
-	# Wait for layout to calculate Label size
-	await get_tree().process_frame
 	update_label()
 
 func update_label():
 	$ValueLabel.text = str(value)
-	# Use Label's actual size for center pivot
-	$ValueLabel.pivot_offset = $ValueLabel.size * 0.5
 
 func add(amount: int):
 	# Update value directly
 	value += amount
 	update_label()
 
-	# Create impact animation (1.5x scale for 500ms)
+	# Create impact animation
 	_create_impact_animation()
 
 	# Emit signal
@@ -35,14 +33,24 @@ func subtract(amount: int):
 	add(-amount)
 
 func _create_impact_animation():
-	# Kill any existing scale animation
-	if _scale_tween:
-		_scale_tween.kill()
+	# Kill any existing animation
+	if _tween:
+		_tween.kill()
 
-	_scale_tween = create_tween()
-	_scale_tween.set_ease(Tween.EASE_OUT)
-	_scale_tween.set_trans(Tween.TRANS_BACK)
+	# Calculate random scale with variation
+	var scale_multiplier = impact_scale * randf_range(1.0 - scale_variation, 1.0 + scale_variation)
 
-	# Scale up then back to 1.0
-	$ValueLabel.scale = Vector2(impact_scale, impact_scale)
-	_scale_tween.tween_property($ValueLabel, "scale", Vector2(1.0, 1.0), animation_duration)
+	# Calculate random rotation (either direction)
+	var rotation_amount = randf_range(-max_rotation_degrees, max_rotation_degrees)
+
+	# Instantly snap to peak state
+	$ValueLabel.scale = Vector2(scale_multiplier, scale_multiplier)
+	$ValueLabel.rotation_degrees = rotation_amount
+
+	# Animate back to normal
+	_tween = create_tween()
+	_tween.set_ease(Tween.EASE_OUT)
+	_tween.set_trans(Tween.TRANS_BACK)
+	_tween.set_parallel(true)
+	_tween.tween_property($ValueLabel, "scale", Vector2(1.0, 1.0), animation_duration)
+	_tween.tween_property($ValueLabel, "rotation_degrees", 0.0, animation_duration)
