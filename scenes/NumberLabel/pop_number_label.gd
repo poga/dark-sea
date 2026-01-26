@@ -3,10 +3,10 @@ extends Node2D
 @export var value: int = 0
 
 @export_group("Animation")
-@export var min_scale: float = 1.5  ## Minimum scale on pop
-@export var max_scale: float = 2.0  ## Maximum scale on pop
-@export var max_rotation_degrees: float = 20.0  ## Max rotation in either direction
-@export var pop_duration: float = 0.1  ## How long the pop is visible before snapping back
+@export var min_scale: float = 1.2  ## Minimum scale on pop
+@export var max_scale: float = 1.5  ## Maximum scale on pop
+@export var max_rotation_degrees: float = 10.0  ## Max rotation in either direction
+@export var pop_duration: float = 0.05  ## How long the pop is visible before snapping back
 
 signal value_updated(new_value: int)
 
