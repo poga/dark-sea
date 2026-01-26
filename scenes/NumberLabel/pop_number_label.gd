@@ -3,10 +3,10 @@ extends Node2D
 @export var value: int = 0
 
 @export_group("Animation")
-@export var impact_scale: float = 1.5  ## Base scale multiplier on value change
-@export var scale_variation: float = 0.4  ## ±40% randomness on scale
+@export var min_scale: float = 1.5  ## Minimum scale on pop
+@export var max_scale: float = 2.0  ## Maximum scale on pop
 @export var max_rotation_degrees: float = 20.0  ## Max rotation in either direction
-@export var pop_duration: float = 0.05  ## How long the pop is visible before snapping back
+@export var pop_duration: float = 0.1  ## How long the pop is visible before snapping back
 
 signal value_updated(new_value: int)
 
@@ -33,8 +33,8 @@ func subtract(amount: int):
 	add(-amount)
 
 func _create_impact_animation():
-	# Calculate random scale with variation
-	var scale_multiplier = impact_scale * randf_range(1.0 - scale_variation, 1.0 + scale_variation)
+	# Calculate random scale
+	var scale_multiplier = randf_range(min_scale, max_scale)
 
 	# Calculate random rotation (either direction)
 	var rotation_amount = randf_range(-max_rotation_degrees, max_rotation_degrees)
