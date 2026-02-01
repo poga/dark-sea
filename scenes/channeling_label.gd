@@ -23,4 +23,14 @@ func _ready() -> void:
 		start()
 
 func start() -> void:
-	pass  # TODO: Implement in Task 3
+	if _tween != null:
+		return  # Already running
+
+	_tween = create_tween()
+	_tween.tween_property(_clip_container, "size:x", 0.0, duration)
+	_tween.finished.connect(_on_channeling_complete)
+
+
+func _on_channeling_complete() -> void:
+	channeling_finished.emit()
+	queue_free()
