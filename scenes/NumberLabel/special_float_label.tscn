@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://d3c48s2do12ba"]
+
+[ext_resource type="Script" uid="uid://ivtvh4of1f7d" path="res://scenes/NumberLabel/special_float_label.gd" id="1_special"]
+
+[node name="SpecialFloatLabel" type="Label" unique_id=727265606]
+offset_left = -31.0
+offset_top = -17.0
+offset_right = 31.0
+offset_bottom = 18.0
+theme_override_colors/font_color = Color(0.6273337, 0.5245531, 0.9589525, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+text = "1234"
+script = ExtResource("1_special")
+phase1_distance = 60.0
+scale_overshoot = 1.15
+scale_target = 1.1

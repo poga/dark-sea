@@ -34,6 +34,13 @@ offset_right = 400.0
 offset_bottom = 151.0
 text = "Spawn"
 
+[node name="SpawnSpecial" type="Button" parent="."]
+offset_left = 318.0
+offset_top = 160.0
+offset_right = 430.0
+offset_bottom = 191.0
+text = "Spawn Special"
+
 [node name="ChannelTextInput" type="LineEdit" parent="." unique_id=2016892754]
 offset_left = 28.0
 offset_top = 222.0
@@ -52,4 +59,5 @@ text = "Spawn Channel"
 [connection signal="pressed" from="PlusOne" to="." method="_on_plus_one_pressed"]
 [connection signal="pressed" from="PlusHundred" to="." method="_on_plus_hundred_pressed"]
 [connection signal="pressed" from="SpawnFloat" to="." method="_on_spawn_float_pressed"]
+[connection signal="pressed" from="SpawnSpecial" to="." method="_on_spawn_special_pressed"]
 [connection signal="pressed" from="SpawnChannel" to="." method="_on_spawn_channel_pressed"]

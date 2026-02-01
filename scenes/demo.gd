@@ -1,6 +1,7 @@
 extends Node2D
 
 const BasicFloatLabel = preload("res://scenes/NumberLabel/basic_float_label.tscn")
+const SpecialFloatLabel = preload("res://scenes/NumberLabel/special_float_label.tscn")
 const ChannelingLabel = preload("res://scenes/channeling_label.tscn")
 
 func _on_plus_one_pressed():
@@ -17,6 +18,13 @@ func _on_spawn_float_pressed():
 	var label: Label = BasicFloatLabel.instantiate()
 	label.text = str(randi_range(1, 99))
 	label.position = $SpawnFloat.position + $SpawnFloat.size / 2
+	add_child(label)
+
+
+func _on_spawn_special_pressed():
+	var label: Label = SpecialFloatLabel.instantiate()
+	label.text = str(randi_range(100, 999))
+	label.position = $SpawnSpecial.position + $SpawnSpecial.size / 2
 	add_child(label)
 
 
