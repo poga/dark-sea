@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://3dht6rffkckf" path="res://scenes/demo.gd" id="1_4m101"]
 [ext_resource type="PackedScene" uid="uid://bxe2yr7j7bayj" path="res://scenes/NumberLabel/NumberLabel.tscn" id="1_aq2v5"]
 [ext_resource type="PackedScene" uid="uid://c8x3yr2j7bayj" path="res://scenes/NumberLabel/PopNumberLabel.tscn" id="3_j1kok"]
+[ext_resource type="PackedScene" uid="uid://dnsevteknmmr4" path="res://scenes/channeling_label.tscn" id="4_vephn"]
 
 [node name="Demo" type="Node2D" unique_id=58519486]
 script = ExtResource("1_4m101")
@@ -34,6 +35,22 @@ offset_right = 400.0
 offset_bottom = 151.0
 text = "Spawn"
 
+[node name="ChannelTextInput" type="LineEdit" parent="."]
+offset_left = 318.0
+offset_top = 180.0
+offset_right = 450.0
+offset_bottom = 211.0
+text = "CHANNELING"
+placeholder_text = "Enter text..."
+
+[node name="SpawnChannel" type="Button" parent="."]
+offset_left = 318.0
+offset_top = 220.0
+offset_right = 450.0
+offset_bottom = 251.0
+text = "Spawn Channel"
+
 [connection signal="pressed" from="PlusOne" to="." method="_on_plus_one_pressed"]
 [connection signal="pressed" from="PlusHundred" to="." method="_on_plus_hundred_pressed"]
 [connection signal="pressed" from="SpawnFloat" to="." method="_on_spawn_float_pressed"]
+[connection signal="pressed" from="SpawnChannel" to="." method="_on_spawn_channel_pressed"]
