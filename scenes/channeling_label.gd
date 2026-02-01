@@ -34,3 +34,12 @@ func start() -> void:
 func _on_channeling_complete() -> void:
 	channeling_finished.emit()
 	queue_free()
+
+
+func cancel() -> void:
+	if _tween != null:
+		_tween.kill()
+		_tween = null
+
+	channeling_cancelled.emit()
+	queue_free()
