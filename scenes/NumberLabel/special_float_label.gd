@@ -5,6 +5,7 @@ extends Label
 @export var phase1_distance: float = 20.0
 @export var scale_overshoot: float = 1.3
 @export var scale_target: float = 1.2
+@export var rotation_overshoot: float = 0.1  ## Max rotation in radians (randomized ±)
 
 # Pause
 @export var pause_duration: float = 0.1
@@ -15,7 +16,11 @@ extends Label
 
 func _ready():
 	var start_pos: Vector2 = position
-	var angle: float = deg_to_rad(-90.0 + randf_range(-10.0, 10.0))
+
+	# Single random factor controls both rotation and movement direction
+	var random_factor: float = randf_range(-1.0, 1.0)
+	var random_rotation: float = random_factor * rotation_overshoot
+	var angle: float = deg_to_rad(-90.0 + random_factor * 10.0)
 	var direction: Vector2 = Vector2(cos(angle), sin(angle))
 
 	var tween: Tween = create_tween()
@@ -26,7 +31,11 @@ func _ready():
 		.set_trans(Tween.TRANS_LINEAR)
 	tween.tween_property(self, "scale", Vector2.ONE * scale_overshoot, phase1_duration * 0.9) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "rotation", random_rotation, phase1_duration * 0.9) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	tween.chain().tween_property(self, "scale", Vector2.ONE * scale_target, phase1_duration * 0.1) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.chain().tween_property(self, "rotation", 0.0, phase1_duration * 0.1) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 	# Pause
