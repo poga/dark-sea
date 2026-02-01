@@ -17,7 +17,12 @@ var _initial_width: float
 func _ready() -> void:
 	_bg_label.text = text
 	_active_label.text = text
-	_initial_width = _clip_container.size.x
+
+	# Resize containers to fit actual text size
+	var label_size: Vector2 = _bg_label.get_minimum_size()
+	_clip_container.size = label_size
+	_active_label.size = label_size
+	_initial_width = label_size.x
 
 	if autostart:
 		start()
