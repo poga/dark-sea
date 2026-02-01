@@ -13,5 +13,5 @@ theme_override_constants/outline_size = 8
 text = "1234"
 script = ExtResource("1_special")
 phase1_distance = 60.0
-scale_overshoot = 1.15
+scale_overshoot = 1.125
 scale_target = 1.1

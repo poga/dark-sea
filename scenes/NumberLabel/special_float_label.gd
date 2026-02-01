@@ -29,11 +29,11 @@ func _ready():
 	tween.set_parallel(true)
 	tween.tween_property(self, "position", start_pos + direction * phase1_distance, phase1_duration) \
 		.set_trans(Tween.TRANS_LINEAR)
-	tween.tween_property(self, "scale", Vector2.ONE * scale_overshoot, phase1_duration * 0.9) \
+	tween.tween_property(self, "scale", Vector2.ONE * scale_overshoot, phase1_duration * 0.95) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	tween.tween_property(self, "rotation", random_rotation, phase1_duration * 0.9) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	tween.chain().tween_property(self, "scale", Vector2.ONE * scale_target, phase1_duration * 0.1) \
+	tween.chain().tween_property(self, "scale", Vector2.ONE * scale_target, phase1_duration * 0.05) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	tween.chain().tween_property(self, "rotation", 0.0, phase1_duration * 0.1) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
