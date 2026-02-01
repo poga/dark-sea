@@ -18,7 +18,7 @@ func _ready():
 	var start_pos: Vector2 = position
 
 	# Single random factor controls both rotation and movement direction
-	var random_factor: float = randf_range(-1.0, 1.0)
+	var random_factor: float = randf_range(-0.05, 0.05)
 	var random_rotation: float = random_factor * rotation_overshoot
 	var angle: float = deg_to_rad(-90.0 + random_factor * 10.0)
 	var direction: Vector2 = Vector2(cos(angle), sin(angle))
