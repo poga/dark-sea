@@ -27,5 +27,13 @@ offset_right = 364.0
 offset_bottom = 108.0
 text = "+100"
 
+[node name="SpawnFloat" type="Button" parent="." unique_id=725149323]
+offset_left = 318.0
+offset_top = 120.0
+offset_right = 400.0
+offset_bottom = 151.0
+text = "Spawn"
+
 [connection signal="pressed" from="PlusOne" to="." method="_on_plus_one_pressed"]
 [connection signal="pressed" from="PlusHundred" to="." method="_on_plus_hundred_pressed"]
+[connection signal="pressed" from="SpawnFloat" to="." method="_on_spawn_float_pressed"]

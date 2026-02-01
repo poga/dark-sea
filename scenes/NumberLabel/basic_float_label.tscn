@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://hxsp6omd3bog"]
+
+[ext_resource type="Script" uid="uid://wumsuowsfypk" path="res://scenes/NumberLabel/basic_float_label.gd" id="1_float"]
+
+[node name="BasicFloatLabel" type="Label" unique_id=2014876138]
+offset_left = -20.0
+offset_top = -12.0
+offset_right = 20.0
+offset_bottom = 13.0
+theme_override_colors/font_outline_color = Color(0.7053691, 0.54874545, 0.13098106, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 18
+text = "572"
+script = ExtResource("1_float")
