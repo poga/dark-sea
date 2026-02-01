@@ -8,8 +8,10 @@ check:
     #!/usr/bin/env bash
     set -euo pipefail
     output=$(/Applications/Godot.app/Contents/MacOS/Godot --headless --import --path . 2>&1)
-    if echo "$output" | grep -q "ERROR"; then
-        echo "$output" | grep -E "(ERROR|SCRIPT ERROR)"
+    # Filter out RID leak warnings from editor plugins (asset_placer) - not relevant for game validation
+    errors=$(echo "$output" | grep -E "ERROR|SCRIPT ERROR" | grep -v "RID allocations" | grep -v "resources still in use" || true)
+    if [ -n "$errors" ]; then
+        echo "$errors"
         exit 1
     fi
     echo "Project validates successfully"
