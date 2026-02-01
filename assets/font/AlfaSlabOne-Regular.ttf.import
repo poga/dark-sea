@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://ikcd3pkvsxs3"
-path="res://.godot/imported/Squealer.otf-2d180099809e18160ce25b645fbce739.fontdata"
+uid="uid://dxi1vpa6i5v37"
+path="res://.godot/imported/AlfaSlabOne-Regular.ttf-20b4ab5d506fefa2b59af226fe119a1c.fontdata"
 
 [deps]
 
-source_file="res://assets/font/Squealer.otf"
-dest_files=["res://.godot/imported/Squealer.otf-2d180099809e18160ce25b645fbce739.fontdata"]
+source_file="res://assets/font/AlfaSlabOne-Regular.ttf"
+dest_files=["res://.godot/imported/AlfaSlabOne-Regular.ttf-20b4ab5d506fefa2b59af226fe119a1c.fontdata"]
 
 [params]
 

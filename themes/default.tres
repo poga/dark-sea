@@ -1,6 +1,6 @@
 [gd_resource type="Theme" format=3 uid="uid://b12lmh4bbtssq"]
 
-[ext_resource type="FontFile" uid="uid://ikcd3pkvsxs3" path="res://assets/font/Squealer.otf" id="1_2g1ym"]
+[ext_resource type="FontFile" uid="uid://dxi1vpa6i5v37" path="res://assets/font/AlfaSlabOne-Regular.ttf" id="1_2g1ym"]
 
 [resource]
 Label/font_sizes/font_size = 25
