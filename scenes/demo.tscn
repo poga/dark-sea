@@ -34,7 +34,7 @@ offset_right = 400.0
 offset_bottom = 151.0
 text = "Spawn"
 
-[node name="SpawnSpecial" type="Button" parent="."]
+[node name="SpawnSpecial" type="Button" parent="." unique_id=1540737790]
 offset_left = 318.0
 offset_top = 160.0
 offset_right = 430.0
