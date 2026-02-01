@@ -2,12 +2,15 @@ extends Label
 
 @export var float_distance: float = 80.0  ## How far the label floats
 @export var float_duration: float = 0.8  ## Animation duration
+@export var rotation_max: float = 0.1  ## Max rotation in radians (randomized ±)
 
 func _ready():
-	# Random angle: straight up (-90°) with ±10° deviation
-	var angle_degrees: float = -90.0 + randf_range(-10.0, 10.0)
+	# Single random factor controls both rotation and movement direction
+	var random_factor: float = randf_range(-1.0, 1.0)
+	var angle_degrees: float = -90.0 + random_factor * 10.0
 	var angle_radians: float = deg_to_rad(angle_degrees)
 	var direction: Vector2 = Vector2(cos(angle_radians), sin(angle_radians))
+	rotation = random_factor * rotation_max
 	var target_offset: Vector2 = direction * float_distance
 
 	# Store starting position
