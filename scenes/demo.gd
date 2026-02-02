@@ -9,7 +9,7 @@ const BASIC_DAMAGE_MIN: int = 19
 const BASIC_DAMAGE_MAX: int = 25
 const SPECIAL_DAMAGE_MIN: int = 130
 const SPECIAL_DAMAGE_MAX: int = 160
-const SPECIAL_PROC_CHANCE: float = 0.1
+const SPECIAL_PROC_CHANCE: float = 0.2
 
 var is_holding_target: bool = false
 var tick_accumulator: float = 0.0
