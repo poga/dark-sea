@@ -1,11 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://dnsevteknmmr4"]
+[gd_scene format=3 uid="uid://dnsevteknmmr4"]
 
-[ext_resource type="Script" path="res://scenes/channeling_label.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://dm67iaxg3ckr6" path="res://scenes/channeling_label.gd" id="1_script"]
 
-[node name="ChannelingLabel" type="Node2D"]
+[node name="ChannelingLabel" type="Node2D" unique_id=805387876]
 script = ExtResource("1_script")
 
-[node name="BGLabel" type="Label" parent="."]
+[node name="BGLabel" type="Label" parent="." unique_id=1022294180]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -21,8 +21,9 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
 text = "CHANNELING"
 
-[node name="ClipContainer" type="Control" parent="."]
+[node name="ClipContainer" type="Control" parent="." unique_id=1890229202]
 clip_contents = true
+layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -35,12 +36,11 @@ offset_bottom = 17.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ActiveLabel" type="Label" parent="ClipContainer"]
+[node name="ActiveLabel" type="Label" parent="ClipContainer" unique_id=1929541512]
 layout_mode = 1
-anchors_preset = 0
 offset_right = 194.0
 offset_bottom = 35.0
-theme_override_colors/font_color = Color(0.9561816, 0.8063388, 0.37932798, 1)
+theme_override_colors/font_color = Color(0.88200736, 0.7229573, 0.23463601, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
 text = "CHANNELING"
