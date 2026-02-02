@@ -3,6 +3,11 @@
 [ext_resource type="Script" uid="uid://3dht6rffkckf" path="res://scenes/demo.gd" id="1_4m101"]
 [ext_resource type="PackedScene" uid="uid://bxe2yr7j7bayj" path="res://scenes/NumberLabel/NumberLabel.tscn" id="1_aq2v5"]
 [ext_resource type="PackedScene" uid="uid://c8x3yr2j7bayj" path="res://scenes/NumberLabel/PopNumberLabel.tscn" id="3_j1kok"]
+[ext_resource type="Texture2D" uid="uid://chlxvwmtf2gic" path="res://icon.svg" id="4_icon"]
+[ext_resource type="PackedScene" path="res://scenes/DamageDisplay/damage_display.tscn" id="5_damage"]
+
+[sub_resource type="RectangleShape2D" id="rect_shape"]
+size = Vector2(64, 64)
 
 [node name="Demo" type="Node2D" unique_id=58519486]
 script = ExtResource("1_4m101")
@@ -56,8 +61,23 @@ offset_right = 450.0
 offset_bottom = 253.0
 text = "Spawn Channel"
 
+[node name="DummyTarget" type="Area2D" parent="." unique_id=9484383]
+position = Vector2(270, 480)
+
+[node name="Sprite2D" type="Sprite2D" parent="DummyTarget" unique_id=1958350258]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("4_icon")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DummyTarget" unique_id=382186283]
+shape = SubResource("rect_shape")
+
+[node name="DamageDisplay" parent="." unique_id=1570294775 instance=ExtResource("5_damage")]
+position = Vector2(270, 480)
+
 [connection signal="pressed" from="PlusOne" to="." method="_on_plus_one_pressed"]
 [connection signal="pressed" from="PlusHundred" to="." method="_on_plus_hundred_pressed"]
 [connection signal="pressed" from="SpawnFloat" to="." method="_on_spawn_float_pressed"]
 [connection signal="pressed" from="SpawnSpecial" to="." method="_on_spawn_special_pressed"]
 [connection signal="pressed" from="SpawnChannel" to="." method="_on_spawn_channel_pressed"]
+[connection signal="input_event" from="DummyTarget" to="." method="_on_dummy_target_input_event"]
+[connection signal="mouse_exited" from="DummyTarget" to="." method="_on_dummy_target_mouse_exited"]
