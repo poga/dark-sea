@@ -1,18 +1,18 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://dnfpyaqun3rrt"]
 
-[ext_resource type="Script" path="res://scenes/DamageDisplay/damage_display.gd" id="1_script"]
-[ext_resource type="PackedScene" path="res://scenes/NumberLabel/PopNumberLabel.tscn" id="2_pop"]
+[ext_resource type="Script" uid="uid://btkcs4ua52ulb" path="res://scenes/DamageDisplay/damage_display.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://c8x3yr2j7bayj" path="res://scenes/NumberLabel/PopNumberLabel.tscn" id="2_pop"]
 
-[node name="DamageDisplay" type="Node2D"]
+[node name="DamageDisplay" type="Node2D" unique_id=1818514469]
 script = ExtResource("1_script")
 
-[node name="BasicLabelPosition" type="Marker2D" parent="."]
+[node name="BasicLabelPosition" type="Marker2D" parent="." unique_id=1420005840]
 position = Vector2(0, -50)
 
-[node name="SpecialLabelPosition" type="Marker2D" parent="."]
-position = Vector2(50, -50)
+[node name="SpecialLabelPosition" type="Marker2D" parent="." unique_id=184121156]
+position = Vector2(-91, -50)
 
-[node name="PopLabelPosition" type="Marker2D" parent="."]
-position = Vector2(0, -80)
+[node name="PopLabelPosition" type="Marker2D" parent="." unique_id=589740593]
+position = Vector2(-35, -20)
 
-[node name="PopNumberLabel" parent="PopLabelPosition" instance=ExtResource("2_pop")]
+[node name="PopNumberLabel" parent="PopLabelPosition" unique_id=720779071 instance=ExtResource("2_pop")]

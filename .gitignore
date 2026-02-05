@@ -7,4 +7,3 @@ build.zip
 
 # Worktrees
 .worktrees/
-*.uid
