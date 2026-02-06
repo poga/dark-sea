@@ -1,21 +1,25 @@
-[gd_scene load_steps=3 format=3 uid="uid://bxe2yr7j7bayj"]
+[gd_scene format=3 uid="uid://bxe2yr7j7bayj"]
 
 [ext_resource type="Script" uid="uid://d08thc1ouaumj" path="res://scenes/NumberLabel/number_label.gd" id="1_5okxj"]
 [ext_resource type="Theme" uid="uid://b12lmh4bbtssq" path="res://themes/default.tres" id="2_caako"]
 
-[node name="NumberLabel" type="Node2D"]
+[node name="NumberLabel" type="Node2D" unique_id=1807204431]
 script = ExtResource("1_5okxj")
 
-[node name="ValueLabel" type="Label" parent="."]
+[node name="ValueLabel" type="Label" parent="." unique_id=1627619799]
 offset_right = 78.0
 offset_bottom = 23.0
 theme = ExtResource("2_caako")
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 9
 text = "12345"
 
-[node name="DeltaLabel" type="Label" parent="."]
+[node name="DeltaLabel" type="Label" parent="." unique_id=924943594]
 visible = false
 offset_left = 88.0
 offset_right = 134.0
 offset_bottom = 35.0
 theme = ExtResource("2_caako")
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 9
 text = "+94"

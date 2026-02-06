@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://bxe2yr7j7bayj" path="res://scenes/NumberLabel/NumberLabel.tscn" id="1_aq2v5"]
 [ext_resource type="PackedScene" uid="uid://c8x3yr2j7bayj" path="res://scenes/NumberLabel/PopNumberLabel.tscn" id="3_j1kok"]
 [ext_resource type="Texture2D" uid="uid://chlxvwmtf2gic" path="res://icon.svg" id="4_icon"]
-[ext_resource type="PackedScene" path="res://scenes/DamageDisplay/damage_display.tscn" id="5_damage"]
+[ext_resource type="PackedScene" uid="uid://dnfpyaqun3rrt" path="res://scenes/DamageDisplay/damage_display.tscn" id="5_damage"]
 
 [sub_resource type="RectangleShape2D" id="rect_shape"]
 size = Vector2(64, 64)
