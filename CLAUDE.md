@@ -8,7 +8,7 @@ Review game scene to understand how it works
 
 **Project validation**: Run `just check` to validate imports and scripts. Use this after making changes to catch parse errors quickly.
 
-**Testing**: NO MOCKS. Test real behavior with real data. All tests must pass. delegate to manual verification when needed.
+**Testing**: NO MOCKS. Test real behavior and system interactions with real data. All tests must pass. Avoid testing specific values designed by designer. delegate to manual verification when needed.
 
 # Architecture Patterns
 

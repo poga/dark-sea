@@ -36,3 +36,5 @@ build-windows:
 	/Applications/Godot.app/Contents/MacOS/Godot --path "$PWD" --headless --export-release "Windows Desktop" build/windows/game.exe
 	cd build/windows && zip -r ../windows.zip .
 
+build-all: build-web build-mac build-linux build-windows
+    echo "All builds completed successfully"
