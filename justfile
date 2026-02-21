@@ -18,7 +18,7 @@ check:
 
 build-web:
     mkdir -p build/web
-    /Applications/Godot.app/Contents/MacOS/Godot --path "$PWD" --headless --export-release "Web" build/webindex.html
+    /Applications/Godot.app/Contents/MacOS/Godot --path "$PWD" --headless --export-release "Web" build/web/index.html
     cd build/web && zip -r ../web.zip .
 
 build-mac:
