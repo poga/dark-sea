@@ -1,8 +1,8 @@
 extends Node2D
 
-const BasicFloatLabel = preload("res://scenes/NumberLabel/basic_float_label.tscn")
-const SpecialFloatLabel = preload("res://scenes/NumberLabel/special_float_label.tscn")
-const ChannelingLabel = preload("res://scenes/channeling_label.tscn")
+const BasicFloatLabel = preload("res://scenes/components/NumberLabel/basic_float_label.tscn")
+const SpecialFloatLabel = preload("res://scenes/components/NumberLabel/special_float_label.tscn")
+const ChannelingLabel = preload("res://scenes/components/channeling_label.tscn")
 
 const TICK_INTERVAL: float = 0.1
 const BASIC_DAMAGE_MIN: int = 19

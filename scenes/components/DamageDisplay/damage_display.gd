@@ -1,7 +1,7 @@
 extends Node2D
 
-const BasicFloatLabel = preload("res://scenes/NumberLabel/basic_float_label.tscn")
-const SpecialFloatLabel = preload("res://scenes/NumberLabel/special_float_label.tscn")
+const BasicFloatLabel = preload("res://scenes/components/NumberLabel/basic_float_label.tscn")
+const SpecialFloatLabel = preload("res://scenes/components/NumberLabel/special_float_label.tscn")
 
 @export var idle_timeout: float = 1.0
 

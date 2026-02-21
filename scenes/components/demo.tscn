@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://4rsod6aak2wy"]
 
-[ext_resource type="Script" uid="uid://3dht6rffkckf" path="res://scenes/demo.gd" id="1_4m101"]
-[ext_resource type="PackedScene" uid="uid://bxe2yr7j7bayj" path="res://scenes/NumberLabel/NumberLabel.tscn" id="1_aq2v5"]
-[ext_resource type="PackedScene" uid="uid://c8x3yr2j7bayj" path="res://scenes/NumberLabel/PopNumberLabel.tscn" id="3_j1kok"]
+[ext_resource type="Script" uid="uid://3dht6rffkckf" path="res://scenes/components/demo.gd" id="1_4m101"]
+[ext_resource type="PackedScene" uid="uid://bxe2yr7j7bayj" path="res://scenes/components/NumberLabel/NumberLabel.tscn" id="1_aq2v5"]
+[ext_resource type="PackedScene" uid="uid://c8x3yr2j7bayj" path="res://scenes/components/NumberLabel/PopNumberLabel.tscn" id="3_j1kok"]
 [ext_resource type="Texture2D" uid="uid://chlxvwmtf2gic" path="res://icon.svg" id="4_icon"]
-[ext_resource type="PackedScene" uid="uid://dnfpyaqun3rrt" path="res://scenes/DamageDisplay/damage_display.tscn" id="5_damage"]
+[ext_resource type="PackedScene" uid="uid://dnfpyaqun3rrt" path="res://scenes/components/DamageDisplay/damage_display.tscn" id="5_damage"]
 
 [sub_resource type="RectangleShape2D" id="rect_shape"]
 size = Vector2(64, 64)

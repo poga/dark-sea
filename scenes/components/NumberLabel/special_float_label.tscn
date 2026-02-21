@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://d3c48s2do12ba"]
 
-[ext_resource type="Script" uid="uid://ivtvh4of1f7d" path="res://scenes/NumberLabel/special_float_label.gd" id="1_special"]
+[ext_resource type="Script" uid="uid://ivtvh4of1f7d" path="res://scenes/components/NumberLabel/special_float_label.gd" id="1_special"]
 
 [node name="SpecialFloatLabel" type="Label" unique_id=727265606]
 offset_left = -31.0

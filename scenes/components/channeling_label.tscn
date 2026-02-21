@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dnsevteknmmr4"]
 
-[ext_resource type="Script" uid="uid://dm67iaxg3ckr6" path="res://scenes/channeling_label.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://dm67iaxg3ckr6" path="res://scenes/components/channeling_label.gd" id="1_script"]
 
 [node name="ChannelingLabel" type="Node2D" unique_id=805387876]
 script = ExtResource("1_script")

@@ -62,5 +62,5 @@ window/handheld/orientation=1
 Look at existing components in `scenes/` and `core/` for patterns.
 
 - `core/game_manager.gd` - singleton pattern, signal definitions. the core game state and logic should be here
-- `scenes/NumberLabel/` - UI component patterns, tweens, exports.
+- `scenes/components/NumberLabel/` - UI component patterns, tweens, exports.
 - `core/tests/test_game_manager.gd` - test structure, signal watching
