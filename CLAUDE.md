@@ -2,6 +2,8 @@
 
 Godot 4 game. signal-driven architecture, and reusable components with scenes.
 
+Review game scene to understand how it works
+
 # Development Workflow
 
 **Project validation**: Run `just check` to validate imports and scripts. Use this after making changes to catch parse errors quickly.
@@ -14,7 +16,7 @@ Godot 4 game. signal-driven architecture, and reusable components with scenes.
 
 **Designer-friendly scenes**: Build components with `@export` variables for tweaking in Inspector. Designers compose games by arranging scenes and adjusting parameters. Designers should not editing code.
 
-**Nested scene architecture**: Compose complex scenes from smaller, focused sub-scenes. Each scene = single responsibility.
+**Nested scene architecture**: Compose complex scenes from smaller, focused sub-scenes, prefer built-in godot scenes and compisition. Each scene = single responsibility.
 
 **Signal communication**: Connect scenes via signals. Parent connects to child signals. Avoid direct cross-scene method calls.
 
@@ -55,7 +57,7 @@ window/handheld/orientation=1
 **Signal-driven updates**: GameManager singleton emits signals → UI scenes react.
 - Singletons in `core/` for state management
 - Scenes in `scenes/` for UI and rendering
-- Tests in `core/tests/` using GUT framework
+- Tests in `core/tests/` using GUT framework. Write tests for components, not visual aspects and feels.
 
 Look at existing components in `scenes/` and `core/` for patterns.
 
