@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+const ZoneScript = preload("res://scenes/zones/zone.gd")
+
 signal item_picked_up(item: Area2D)
 signal item_dropped(item: Area2D, drop_position: Vector2)
 
@@ -8,6 +10,7 @@ signal item_dropped(item: Area2D, drop_position: Vector2)
 
 var held_item: Area2D = null
 var _items_in_range: Array[Area2D] = []
+var current_zone = null  # ZoneScript.ZoneType or null
 
 func _ready():
 	$Camera2D.position_smoothing_speed = camera_smoothing_speed
@@ -22,7 +25,8 @@ func _physics_process(_delta):
 func _unhandled_input(event: InputEvent):
 	if event.is_action_pressed("interact"):
 		if held_item:
-			drop_item()
+			if can_drop():
+				drop_item()
 		else:
 			pick_up_nearest_item()
 
@@ -50,19 +54,33 @@ func pick_up_nearest_item():
 	nearest.position = Vector2.ZERO
 	item_picked_up.emit(nearest)
 
+func can_drop() -> bool:
+	if current_zone == null:
+		return false
+	return current_zone != ZoneScript.ZoneType.SEA
+
 func drop_item():
 	var item: Area2D = held_item
 	var drop_pos: Vector2 = global_position
 	held_item = null
-	item.drop()
+	if current_zone == ZoneScript.ZoneType.TOWER:
+		item.drop()
+	else:
+		item.drop_as_pickup()
 	$HoldPosition.remove_child(item)
 	get_parent().add_child(item)
 	item.global_position = drop_pos
 	item_dropped.emit(item, drop_pos)
 
 func _on_pickup_zone_area_entered(area: Area2D):
-	if area != held_item:
+	if "zone_type" in area:
+		current_zone = area.zone_type
+	elif area != held_item:
 		_items_in_range.append(area)
 
 func _on_pickup_zone_area_exited(area: Area2D):
-	_items_in_range.erase(area)
+	if "zone_type" in area:
+		if current_zone == area.zone_type:
+			current_zone = null
+	else:
+		_items_in_range.erase(area)

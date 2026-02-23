@@ -28,6 +28,10 @@ func drop():
 	_update_state_visuals()
 	placed_as_turret.emit()
 
+func drop_as_pickup() -> void:
+	current_state = State.PICKUP
+	_update_state_visuals()
+
 func _update_state_visuals():
 	$PickupState.visible = current_state == State.PICKUP
 	$TurretState.visible = current_state == State.TURRET
