@@ -34,17 +34,21 @@ func pick_up():
 	_monsters_in_range.clear()
 	_update_state_visuals()
 	_update_turret_systems()
+	_on_turret_deactivated()
 
 func drop():
 	current_state = State.TURRET
 	_update_state_visuals()
 	_update_turret_systems()
+	_on_turret_activated()
 	placed_as_turret.emit()
 
 func drop_as_pickup() -> void:
 	current_state = State.PICKUP
 	_update_state_visuals()
 	_update_turret_systems()
+
+# --- Virtual methods: override in custom items ---
 
 func _find_target() -> Area2D:
 	if _monsters_in_range.is_empty():
@@ -60,7 +64,7 @@ func _find_target() -> Area2D:
 			closest = monster
 	return closest
 
-func _shoot_at(target: Area2D) -> void:
+func _attack(target: Area2D) -> void:
 	var projectile: Area2D = _projectile_scene.instantiate()
 	projectile.global_position = global_position
 	var dir: Vector2 = (target.global_position - global_position).normalized()
@@ -68,6 +72,14 @@ func _shoot_at(target: Area2D) -> void:
 	projectile.speed = projectile_speed
 	projectile.damage = projectile_damage
 	get_tree().current_scene.add_child(projectile)
+
+func _on_turret_activated() -> void:
+	pass
+
+func _on_turret_deactivated() -> void:
+	pass
+
+# --- Internal methods ---
 
 func _update_state_visuals():
 	$PickupState.visible = current_state == State.PICKUP
@@ -94,4 +106,4 @@ func _on_shoot_timer_timeout() -> void:
 	_monsters_in_range = _monsters_in_range.filter(func(m): return is_instance_valid(m))
 	var target: Area2D = _find_target()
 	if target:
-		_shoot_at(target)
+		_attack(target)
