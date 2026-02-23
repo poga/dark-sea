@@ -4,11 +4,13 @@ signal item_picked_up(item: Area2D)
 signal item_dropped(item: Area2D, drop_position: Vector2)
 
 @export var speed: float = 200.0
+@export var camera_smoothing_speed: float = 5.0
 
 var held_item: Area2D = null
 var _items_in_range: Array[Area2D] = []
 
 func _ready():
+	$Camera2D.position_smoothing_speed = camera_smoothing_speed
 	$PickupZone.area_entered.connect(_on_pickup_zone_area_entered)
 	$PickupZone.area_exited.connect(_on_pickup_zone_area_exited)
 
