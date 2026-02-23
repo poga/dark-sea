@@ -54,6 +54,13 @@ interact={
 ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="player"
+2d_physics/layer_2="items"
+2d_physics/layer_3="monsters"
+2d_physics/layer_4="projectiles"
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
