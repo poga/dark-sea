@@ -1,10 +1,13 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scenes/item/item.gd" id="1"]
 [ext_resource type="Texture2D" path="res://icon.svg" id="2"]
 
 [sub_resource type="CircleShape2D" id="SubResource_1"]
 radius = 20.0
+
+[sub_resource type="CircleShape2D" id="SubResource_2"]
+radius = 150.0
 
 [node name="Item" type="Area2D"]
 script = ExtResource("1")
@@ -38,6 +41,19 @@ offset_right = 40.0
 offset_bottom = -35.0
 horizontal_alignment = 1
 text = "Turret"
+
+[node name="DetectionArea" type="Area2D" parent="TurretState"]
+collision_layer = 0
+collision_mask = 4
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TurretState/DetectionArea"]
+shape = SubResource("SubResource_2")
+
+[node name="ShootTimer" type="Timer" parent="TurretState"]
+wait_time = 1.0
+one_shot = false
+autostart = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("SubResource_1")

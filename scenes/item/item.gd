@@ -7,13 +7,23 @@ signal placed_as_turret
 enum State { PICKUP, TURRET }
 
 @export var item_name: String = "Item"
+@export var attack_range: float = 150.0
+@export var attack_rate: float = 1.0
+@export var projectile_speed: float = 300.0
+@export var projectile_damage: float = 10.0
 
 var current_state: State = State.PICKUP
+var _monsters_in_range: Array[Area2D] = []
+var _projectile_scene: PackedScene = preload("res://scenes/projectile/projectile.tscn")
 
 func _ready():
 	$PickupState/Label.text = item_name
 	$TurretState/Label.text = item_name
+	$TurretState/DetectionArea.area_entered.connect(_on_detection_area_entered)
+	$TurretState/DetectionArea.area_exited.connect(_on_detection_area_exited)
+	$TurretState/ShootTimer.timeout.connect(_on_shoot_timer_timeout)
 	_update_state_visuals()
+	_update_turret_systems()
 
 func pick_up():
 	if current_state == State.PICKUP:
@@ -21,17 +31,67 @@ func pick_up():
 	else:
 		picked_up_as_turret.emit()
 	current_state = State.PICKUP
+	_monsters_in_range.clear()
 	_update_state_visuals()
+	_update_turret_systems()
 
 func drop():
 	current_state = State.TURRET
 	_update_state_visuals()
+	_update_turret_systems()
 	placed_as_turret.emit()
 
 func drop_as_pickup() -> void:
 	current_state = State.PICKUP
 	_update_state_visuals()
+	_update_turret_systems()
+
+func _find_target() -> Area2D:
+	if _monsters_in_range.is_empty():
+		return null
+	var closest: Area2D = null
+	var closest_dist: float = INF
+	for monster in _monsters_in_range:
+		if not is_instance_valid(monster):
+			continue
+		var dist: float = global_position.distance_to(monster.global_position)
+		if dist < closest_dist:
+			closest_dist = dist
+			closest = monster
+	return closest
+
+func _shoot_at(target: Area2D) -> void:
+	var projectile: Area2D = _projectile_scene.instantiate()
+	projectile.global_position = global_position
+	var dir: Vector2 = (target.global_position - global_position).normalized()
+	projectile.direction = dir
+	projectile.speed = projectile_speed
+	projectile.damage = projectile_damage
+	get_tree().current_scene.add_child(projectile)
 
 func _update_state_visuals():
 	$PickupState.visible = current_state == State.PICKUP
 	$TurretState.visible = current_state == State.TURRET
+
+func _update_turret_systems() -> void:
+	var active: bool = current_state == State.TURRET
+	$TurretState/DetectionArea.monitoring = active
+	if active:
+		$TurretState/DetectionArea/CollisionShape2D.shape.radius = attack_range
+		$TurretState/ShootTimer.wait_time = 1.0 / attack_rate
+		$TurretState/ShootTimer.start()
+	else:
+		$TurretState/ShootTimer.stop()
+
+func _on_detection_area_entered(area: Area2D) -> void:
+	if area.has_method("take_damage"):
+		_monsters_in_range.append(area)
+
+func _on_detection_area_exited(area: Area2D) -> void:
+	_monsters_in_range.erase(area)
+
+func _on_shoot_timer_timeout() -> void:
+	_monsters_in_range = _monsters_in_range.filter(func(m): return is_instance_valid(m))
+	var target: Area2D = _find_target()
+	if target:
+		_shoot_at(target)
