@@ -6,16 +6,23 @@ extends Node2D
 @export var spawn_area_path: NodePath
 @export var sea_zone_path: NodePath
 @export var gold_per_day: int = 5
+@export var tide_path: NodePath
 
 var _gold_scene: PackedScene = preload("res://scenes/gold/gold.tscn")
 var _spawn_area: Area2D
 var _sea_zone: Area2D
+var _tide: ColorRect
+var _spawned_gold: Array[Area2D] = []
 
 func _ready() -> void:
 	if spawn_area_path:
 		_spawn_area = get_node(spawn_area_path) as Area2D
 	if sea_zone_path:
 		_sea_zone = get_node(sea_zone_path) as Area2D
+	if tide_path:
+		_tide = get_node(tide_path) as ColorRect
+		_tide.tide_position_changed.connect(_on_tide_position_changed)
+		_tide.tide_risen.connect(_on_tide_risen)
 	GameManager.day_started.connect(_on_day_started)
 	GameManager.night_started.connect(_on_night_started)
 
@@ -23,7 +30,8 @@ func _on_day_started() -> void:
 	_spawn_gold()
 
 func _on_night_started() -> void:
-	_cleanup_sea_gold()
+	if _tide == null:
+		_cleanup_sea_gold()
 
 func _spawn_gold() -> void:
 	if _spawn_area == null:
@@ -32,7 +40,10 @@ func _spawn_gold() -> void:
 	for _i in gold_per_day:
 		var gold: Area2D = _gold_scene.instantiate()
 		gold.global_position = _random_point_in_spawn_area()
+		if _tide:
+			gold.visible = false
 		get_parent().add_child(gold)
+		_spawned_gold.append(gold)
 
 func _random_point_in_spawn_area() -> Vector2:
 	var shape: CollisionShape2D = _spawn_area.get_child(0) as CollisionShape2D
@@ -55,3 +66,13 @@ func _cleanup_sea_gold() -> void:
 	for gold in get_tree().get_nodes_in_group("gold"):
 		if is_instance_valid(gold) and gold.global_position.x >= zone_left and gold.global_position.x <= zone_right:
 			gold.queue_free()
+
+func _on_tide_position_changed(left_edge_x: float) -> void:
+	for gold in _spawned_gold:
+		if not is_instance_valid(gold):
+			continue
+		gold.visible = gold.global_position.x < left_edge_x
+
+func _on_tide_risen() -> void:
+	_cleanup_sea_gold()
+	_spawned_gold.clear()
