@@ -10,7 +10,6 @@ signal item_dropped(item: Area2D, drop_position: Vector2)
 
 var held_item: Area2D = null
 var _items_in_range: Array[Area2D] = []
-var current_zone = null  # ZoneScript.ZoneType or null
 
 func _ready():
 	$Camera2D.position_smoothing_speed = camera_smoothing_speed
@@ -54,16 +53,24 @@ func pick_up_nearest_item():
 	nearest.position = Vector2.ZERO
 	item_picked_up.emit(nearest)
 
+func get_current_zone():
+	for area in $PickupZone.get_overlapping_areas():
+		if "zone_type" in area:
+			return area.zone_type
+	return null
+
 func can_drop() -> bool:
-	if current_zone == null:
+	var zone = get_current_zone()
+	if zone == null:
 		return false
-	return current_zone != ZoneScript.ZoneType.SEA
+	return zone != ZoneScript.ZoneType.SEA
 
 func drop_item():
 	var item: Area2D = held_item
 	var drop_pos: Vector2 = global_position
 	held_item = null
-	if current_zone == ZoneScript.ZoneType.TOWER:
+	var zone = get_current_zone()
+	if zone == ZoneScript.ZoneType.TOWER:
 		item.drop()
 	else:
 		item.drop_as_pickup()
@@ -73,14 +80,9 @@ func drop_item():
 	item_dropped.emit(item, drop_pos)
 
 func _on_pickup_zone_area_entered(area: Area2D):
-	if "zone_type" in area:
-		current_zone = area.zone_type
-	elif area != held_item and area.has_method("pick_up"):
+	if area != held_item and area.has_method("pick_up"):
 		_items_in_range.append(area)
 
 func _on_pickup_zone_area_exited(area: Area2D):
-	if "zone_type" in area:
-		if current_zone == area.zone_type:
-			current_zone = null
-	else:
+	if not "zone_type" in area:
 		_items_in_range.erase(area)
