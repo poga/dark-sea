@@ -42,6 +42,7 @@ shape = SubResource("RectangleShape2D_1")
 [node name="ItemSpawner" type="Node2D" parent="."]
 script = ExtResource("9")
 spawn_area_path = NodePath("../ItemSpawnArea")
+sea_zone_path = NodePath("../Zones/SeaZone")
 
 [node name="GoldSpawner" type="Node2D" parent="."]
 script = ExtResource("11")

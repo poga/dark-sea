@@ -5,7 +5,9 @@ extends Node2D
 ## The spawn_area export is set in the editor to an Area2D with a rectangular CollisionShape2D.
 
 @export var spawn_area_path: NodePath
+@export var sea_zone_path: NodePath
 var spawn_area: Area2D
+var _sea_zone: Area2D
 
 # --- Item pool: edit this to change what spawns ---
 # Each entry has a scene and a weight (higher = more likely).
@@ -23,6 +25,8 @@ var _spawned_items: Array[Area2D] = []
 func _ready() -> void:
 	if spawn_area_path:
 		spawn_area = get_node(spawn_area_path) as Area2D
+	if sea_zone_path:
+		_sea_zone = get_node(sea_zone_path) as Area2D
 	GameManager.day_started.connect(_on_day_started)
 	GameManager.night_started.connect(_on_night_started)
 
@@ -67,7 +71,19 @@ func _random_point_in_spawn_area() -> Vector2:
 	return spawn_area.global_position + shape.position + local_pos
 
 func _cleanup_uncollected_items() -> void:
+	if _sea_zone == null:
+		push_error("ItemSpawner: sea_zone is not assigned.")
+		return
+	var zone_pos: Vector2 = _sea_zone.global_position
+	var zone_half_width: float = _sea_zone.zone_width / 2.0
+	var zone_left: float = zone_pos.x - zone_half_width
+	var zone_right: float = zone_pos.x + zone_half_width
+	var remaining: Array[Area2D] = []
 	for item in _spawned_items:
-		if is_instance_valid(item) and item.current_state == item.State.PICKUP:
+		if not is_instance_valid(item):
+			continue
+		if item.current_state == item.State.PICKUP and item.global_position.x >= zone_left and item.global_position.x <= zone_right:
 			item.queue_free()
-	_spawned_items.clear()
+		else:
+			remaining.append(item)
+	_spawned_items = remaining
