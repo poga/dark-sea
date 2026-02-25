@@ -10,6 +10,15 @@ Review game scene to understand how it works
 
 **Testing**: NO MOCKS. Test real behavior and system interactions with real data. All tests must pass. Avoid testing specific values designed by designer. delegate to manual verification when needed.
 
+## Linear Task Workflow
+
+When working on a Linear task, follow this lifecycle:
+
+1. **Brainstorming**: If brainstorming for a task, update the Linear ticket with the design outcome when brainstorming is finished.
+2. **Start implementation**: Update the ticket status to `In Progress` when starting implementation.
+3. **Implementation plan**: Update the ticket with the implementation plan (as a comment).
+4. **Completion**: Create a PR, update the ticket with the PR link, and mark the ticket as `In Review` once the work is verified.
+
 # Architecture Patterns
 
 ## Godot Best Practices
