@@ -29,11 +29,10 @@ func _physics_process(_delta):
 
 func _unhandled_input(event: InputEvent):
 	if event.is_action_pressed("interact"):
-		if has_active_item():
-			if can_drop():
-				drop_item()
-		else:
+		if get_nearest_item() != null and _find_empty_slot() != -1:
 			pick_up_nearest_item()
+		elif has_active_item() and can_drop():
+			drop_item()
 		return
 	# Direct slot selection (1-8)
 	for i in range(INVENTORY_SIZE):

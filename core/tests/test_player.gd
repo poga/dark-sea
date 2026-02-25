@@ -107,6 +107,17 @@ func test_pick_up_does_nothing_when_no_items():
 	for slot in player.inventory:
 		assert_null(slot)
 
+func test_pick_up_while_holding_stores_in_next_empty_slot():
+	var item1: Area2D = _make_item(Vector2(30, 0))
+	var item2: Area2D = _make_item(Vector2(40, 0))
+	_pick_up_item(item1)
+	# item1 is in slot 0 (active). Now pick up item2 — should go to slot 1.
+	_pick_up_item(item2)
+	assert_eq(player.inventory[0], item1)
+	assert_eq(player.inventory[1], item2)
+	# item1 should still be at HoldPosition (active slot unchanged)
+	assert_eq(item1.get_parent(), player.get_node("HoldPosition"))
+
 # --- Drop ---
 
 func test_drop_clears_active_slot():
