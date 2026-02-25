@@ -59,10 +59,7 @@ func get_current_zone():
 	return null
 
 func can_drop() -> bool:
-	var zone = get_current_zone()
-	if zone == null:
-		return false
-	return zone != ZoneScript.ZoneType.SEA
+	return get_current_zone() == ZoneScript.ZoneType.TOWER
 
 func drop_item():
 	var item: Area2D = inventory[active_slot]
@@ -70,11 +67,7 @@ func drop_item():
 		return
 	var drop_pos: Vector2 = global_position
 	inventory[active_slot] = null
-	var zone = get_current_zone()
-	if zone == ZoneScript.ZoneType.TOWER:
-		item.drop()
-	else:
-		item.drop_as_pickup()
+	item.drop()
 	$HoldPosition.remove_child(item)
 	get_parent().add_child(item)
 	item.global_position = drop_pos
@@ -126,7 +119,7 @@ func _try_auto_pickup_from_range() -> void:
 func _on_pickup_zone_area_entered(area: Area2D):
 	if not inventory.has(area) and area.has_method("pick_up"):
 		_items_in_range.append(area)
-		_try_auto_pickup(area)
+		_try_auto_pickup.call_deferred(area)
 
 func _on_pickup_zone_area_exited(area: Area2D):
 	if not "zone_type" in area:
