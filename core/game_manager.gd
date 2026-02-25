@@ -27,22 +27,21 @@ func increment_state():
 	return state
 
 func start_cycle() -> void:
+	_phase_timer.stop()
 	current_phase = Phase.DAY
 	day_started.emit()
 	phase_changed.emit(current_phase)
 	_phase_timer.wait_time = day_duration
 	_phase_timer.start()
 
-func get_current_phase() -> Phase:
-	return current_phase
-
 func _on_phase_timer_timeout() -> void:
 	if current_phase == Phase.DAY:
 		current_phase = Phase.NIGHT
 		night_started.emit()
+		_phase_timer.wait_time = night_duration
 	else:
 		current_phase = Phase.DAY
 		day_started.emit()
+		_phase_timer.wait_time = day_duration
 	phase_changed.emit(current_phase)
-	_phase_timer.wait_time = night_duration if current_phase == Phase.NIGHT else day_duration
 	_phase_timer.start()

@@ -38,3 +38,11 @@ func test_start_cycle_emits_phase_changed_with_day():
 	watch_signals(GameManager)
 	GameManager.start_cycle()
 	assert_signal_emitted_with_parameters(GameManager, "phase_changed", [GameManager.Phase.DAY])
+
+func test_phase_timer_timeout_transitions_to_night():
+	GameManager.start_cycle()
+	watch_signals(GameManager)
+	GameManager._on_phase_timer_timeout()
+	assert_eq(GameManager.current_phase, GameManager.Phase.NIGHT)
+	assert_signal_emitted(GameManager, "night_started")
+	assert_signal_emitted_with_parameters(GameManager, "phase_changed", [GameManager.Phase.NIGHT])
