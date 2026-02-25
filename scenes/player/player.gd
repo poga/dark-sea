@@ -97,6 +97,8 @@ func switch_prev() -> void:
 	switch_to_slot((active_slot - 1 + INVENTORY_SIZE) % INVENTORY_SIZE)
 
 func _try_auto_pickup(item: Area2D) -> void:
+	if inventory.has(item):
+		return
 	var slot: int = _find_empty_slot()
 	if slot == -1:
 		return
@@ -119,7 +121,7 @@ func _try_auto_pickup_from_range() -> void:
 func _on_pickup_zone_area_entered(area: Area2D):
 	if not inventory.has(area) and area.has_method("pick_up") and area.current_state == area.State.PICKUP:
 		_items_in_range.append(area)
-		_try_auto_pickup.call_deferred(area)
+		_try_auto_pickup(area)
 
 func _on_pickup_zone_area_exited(area: Area2D):
 	if not "zone_type" in area:
