@@ -188,6 +188,12 @@ func test_auto_pickup_ignored_when_inventory_full():
 	# extra should remain in _items_in_range for later pickup
 	assert_true(player._items_in_range.has(extra))
 
+func test_auto_pickup_ignores_turret_state_items():
+	var item: Area2D = _make_item(Vector2(30, 0))
+	item.drop()  # Set to TURRET state
+	_simulate_item_enters_range(item)
+	assert_false(player.inventory.has(item))
+
 func test_drop_triggers_auto_pickup_of_nearby_items():
 	# Fill all 8 slots
 	var items: Array[Area2D] = []

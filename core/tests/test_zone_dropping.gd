@@ -27,9 +27,3 @@ func test_drop_in_tower_zone_sets_turret_state():
 	# we test the item's drop methods directly to verify state transitions.
 	item.drop()
 	assert_eq(item.current_state, item.State.TURRET)
-
-func test_drop_in_beach_zone_keeps_pickup_state():
-	var item: Area2D = _make_item(Vector2(30, 0))
-	_simulate_item_enters_range(item)
-	item.drop_as_pickup()
-	assert_eq(item.current_state, item.State.PICKUP)

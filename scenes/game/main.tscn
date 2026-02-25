@@ -1,8 +1,7 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/zones/tower_zone.tscn" id="3"]
-[ext_resource type="PackedScene" path="res://scenes/zones/beach_zone.tscn" id="4"]
 [ext_resource type="PackedScene" path="res://scenes/zones/sea_zone.tscn" id="5"]
 [ext_resource type="Script" path="res://scenes/game/monster_spawner.gd" id="6"]
 [ext_resource type="Script" path="res://scenes/game/main.gd" id="8"]
@@ -23,9 +22,6 @@ script = ExtResource("8")
 
 [node name="TowerZone" parent="Zones" instance=ExtResource("3")]
 position = Vector2(-400, 0)
-
-[node name="BeachZone" parent="Zones" instance=ExtResource("4")]
-position = Vector2(-100, 0)
 
 [node name="SeaZone" parent="Zones" instance=ExtResource("5")]
 position = Vector2(300, 0)
