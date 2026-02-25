@@ -10,6 +10,19 @@ Review game scene to understand how it works
 
 **Testing**: NO MOCKS. Test real behavior and system interactions with real data. All tests must pass. Avoid testing specific values designed by designer. delegate to manual verification when needed.
 
+## Linear Task Lifecycle
+
+When working on a Linear ticket (team: `SCA`), follow this state flow:
+
+**`Todo` → `In Progress` → `In Review` → `Done`**
+
+1. **Brainstorming done** — Comment on the ticket with a link to the design doc.
+2. **Start implementation** — Move ticket to `In Progress`. Create a branch named `sca-<number>-<short-description>`.
+3. **Verification complete** — Create a PR with `Closes SCA-XX` in the description. Move ticket to `In Review`.
+4. **Merged** — Merging the PR auto-closes the ticket to `Done`.
+
+Not all work requires a Linear ticket. This workflow only applies when a ticket ID is given.
+
 # Architecture Patterns
 
 ## Godot Best Practices
