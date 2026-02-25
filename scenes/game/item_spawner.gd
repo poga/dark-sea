@@ -14,7 +14,7 @@ var item_pool: Array[Dictionary] = [
 ]
 
 # --- Spawning rules: edit this to change how many spawn ---
-var items_per_day: int = 4
+@export var items_per_day: int = 4
 
 # --- Internal tracking ---
 var _spawned_items: Array[Area2D] = []
@@ -30,11 +30,14 @@ func _on_night_started() -> void:
 	_cleanup_uncollected_items()
 
 func _spawn_items() -> void:
+	if spawn_area == null:
+		push_error("ItemSpawner: spawn_area is not assigned.")
+		return
 	var total_weight: float = 0.0
 	for entry in item_pool:
 		total_weight += entry["weight"]
 
-	for i in items_per_day:
+	for _i in items_per_day:
 		var item_scene: PackedScene = _pick_weighted_random(total_weight)
 		var item: Area2D = item_scene.instantiate()
 		item.global_position = _random_point_in_spawn_area()
