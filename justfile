@@ -4,7 +4,7 @@ test:
     /Applications/Godot.app/Contents/MacOS/Godot --headless --script res://addons/gut/gut_cmdln.gd -gdir=res://core/tests -gexit
 
 # Validate Godot project - checks imports and script parsing
-check:
+check: test
     #!/usr/bin/env bash
     set -euo pipefail
     output=$(/Applications/Godot.app/Contents/MacOS/Godot --headless --import --path . 2>&1)
