@@ -9,6 +9,7 @@ signal inventory_changed(slot: int, item: Area2D)
 signal active_slot_changed(slot: int)
 
 @export var speed: float = 200.0
+@export var camera_smoothing_speed: float = 5.0
 
 var inventory: Array[Area2D] = []
 var active_slot: int = 0
@@ -17,6 +18,7 @@ var _items_in_range: Array[Area2D] = []
 func _ready():
 	inventory.resize(INVENTORY_SIZE)
 	inventory.fill(null)
+	$Camera2D.position_smoothing_speed = camera_smoothing_speed
 	$PickupZone.area_entered.connect(_on_pickup_zone_area_entered)
 	$PickupZone.area_exited.connect(_on_pickup_zone_area_exited)
 
