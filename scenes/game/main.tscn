@@ -11,6 +11,7 @@
 [ext_resource type="Script" uid="uid://j58uel4a1cnw" path="res://scenes/game/gold_label.gd" id="12"]
 [ext_resource type="PackedScene" uid="uid://bxe2yr7j7bayj" path="res://scenes/components/NumberLabel/NumberLabel.tscn" id="13"]
 [ext_resource type="PackedScene" path="res://scenes/ui/toolbar.tscn" id="14"]
+[ext_resource type="Script" path="res://scenes/game/tide.gd" id="15"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(400, 600)
@@ -40,11 +41,13 @@ shape = SubResource("RectangleShape2D_1")
 script = ExtResource("9")
 spawn_area_path = NodePath("../ItemSpawnArea")
 sea_zone_path = NodePath("../Zones/SeaZone")
+tide_path = NodePath("../Tide")
 
 [node name="GoldSpawner" type="Node2D" parent="." unique_id=2013063953]
 script = ExtResource("11")
 spawn_area_path = NodePath("../ItemSpawnArea")
 sea_zone_path = NodePath("../Zones/SeaZone")
+tide_path = NodePath("../Tide")
 
 [node name="MonsterSpawner" type="Node2D" parent="." unique_id=629940896]
 script = ExtResource("6")
@@ -75,3 +78,4 @@ offset_top = -400.0
 offset_right = 504.0
 offset_bottom = 393.0
 color = Color(0, 0.5921569, 0.7764706, 0.5803922)
+script = ExtResource("15")
