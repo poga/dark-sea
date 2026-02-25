@@ -38,7 +38,7 @@ shape = SubResource("RectangleShape2D_1")
 
 [node name="ItemSpawner" type="Node2D" parent="."]
 script = ExtResource("9")
-spawn_area = NodePath("../ItemSpawnArea")
+spawn_area_path = NodePath("../ItemSpawnArea")
 
 [node name="TestSpawner" type="Node2D" parent="."]
 script = ExtResource("6")

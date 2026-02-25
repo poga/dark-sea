@@ -4,7 +4,8 @@ extends Node2D
 ## Designers: edit item_pool and items_per_day to change spawning behavior.
 ## The spawn_area export is set in the editor to an Area2D with a rectangular CollisionShape2D.
 
-@export var spawn_area: Area2D
+@export var spawn_area_path: NodePath
+var spawn_area: Area2D
 
 # --- Item pool: edit this to change what spawns ---
 # Each entry has a scene and a weight (higher = more likely).
@@ -20,6 +21,8 @@ var item_pool: Array[Dictionary] = [
 var _spawned_items: Array[Area2D] = []
 
 func _ready() -> void:
+	if spawn_area_path:
+		spawn_area = get_node(spawn_area_path) as Area2D
 	GameManager.day_started.connect(_on_day_started)
 	GameManager.night_started.connect(_on_night_started)
 
