@@ -24,3 +24,17 @@ func test_state_changed_signal():
 	GameManager.increment_state()
 
 	assert_signal_emitted(GameManager, "state_changed", "state_changed signal should be emitted")
+
+func test_start_cycle_begins_with_day():
+	GameManager.start_cycle()
+	assert_eq(GameManager.current_phase, GameManager.Phase.DAY)
+
+func test_start_cycle_emits_day_started():
+	watch_signals(GameManager)
+	GameManager.start_cycle()
+	assert_signal_emitted(GameManager, "day_started")
+
+func test_start_cycle_emits_phase_changed_with_day():
+	watch_signals(GameManager)
+	GameManager.start_cycle()
+	assert_signal_emitted_with_parameters(GameManager, "phase_changed", [GameManager.Phase.DAY])
