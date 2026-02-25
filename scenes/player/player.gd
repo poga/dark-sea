@@ -112,6 +112,7 @@ func drop_item():
 	item.global_position = drop_pos
 	inventory_changed.emit(active_slot, null)
 	item_dropped.emit(item, drop_pos)
+	_try_auto_pickup_from_range()
 
 func switch_to_slot(slot: int) -> void:
 	if slot < 0 or slot >= INVENTORY_SIZE:
@@ -147,6 +148,12 @@ func _try_auto_pickup(item: Area2D) -> void:
 		item.position = Vector2.ZERO
 	inventory_changed.emit(slot, item)
 	item_picked_up.emit(item)
+
+func _try_auto_pickup_from_range() -> void:
+	for item in _items_in_range.duplicate():
+		if _find_empty_slot() == -1:
+			break
+		_try_auto_pickup(item)
 
 func _on_pickup_zone_area_entered(area: Area2D):
 	if not inventory.has(area) and area.has_method("pick_up"):
