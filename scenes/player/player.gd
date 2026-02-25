@@ -28,9 +28,6 @@ func _physics_process(_delta):
 	move_and_slide()
 
 func _unhandled_input(event: InputEvent):
-	if event.is_action_pressed("interact"):
-		pick_up_nearest_item()
-		return
 	if event.is_action_pressed("drop"):
 		if has_active_item() and can_drop():
 			drop_item()
@@ -49,40 +46,11 @@ func _unhandled_input(event: InputEvent):
 func has_active_item() -> bool:
 	return inventory[active_slot] != null
 
-func get_nearest_item() -> Area2D:
-	if _items_in_range.is_empty():
-		return null
-	var nearest: Area2D = null
-	var nearest_distance: float = INF
-	for item in _items_in_range:
-		var distance: float = global_position.distance_to(item.global_position)
-		if distance < nearest_distance:
-			nearest_distance = distance
-			nearest = item
-	return nearest
-
 func _find_empty_slot() -> int:
 	for i in range(INVENTORY_SIZE):
 		if inventory[i] == null:
 			return i
 	return -1
-
-func pick_up_nearest_item():
-	var nearest: Area2D = get_nearest_item()
-	if nearest == null:
-		return
-	var slot: int = _find_empty_slot()
-	if slot == -1:
-		return
-	_items_in_range.erase(nearest)
-	nearest.get_parent().remove_child(nearest)
-	nearest.store_in_inventory()
-	inventory[slot] = nearest
-	if slot == active_slot:
-		$HoldPosition.add_child(nearest)
-		nearest.position = Vector2.ZERO
-	inventory_changed.emit(slot, nearest)
-	item_picked_up.emit(nearest)
 
 func get_current_zone():
 	for area in $PickupZone.get_overlapping_areas():
