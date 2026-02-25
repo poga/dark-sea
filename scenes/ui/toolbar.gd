@@ -4,6 +4,7 @@ extends HBoxContainer
 
 var _player: CharacterBody2D
 var _slots: Array[PanelContainer] = []
+var _icons: Array[TextureRect] = []
 
 func _ready():
 	_player = get_node(player_path)
@@ -31,9 +32,10 @@ func _build_slots() -> void:
 		vbox.add_child(label)
 		add_child(panel)
 		_slots.append(panel)
+		_icons.append(icon)
 
 func _on_inventory_changed(slot: int, item: Area2D) -> void:
-	var icon: TextureRect = _slots[slot].get_node("VBoxContainer/Icon")
+	var icon: TextureRect = _icons[slot]
 	if item != null and item.inventory_icon != null:
 		icon.texture = item.inventory_icon
 	else:
