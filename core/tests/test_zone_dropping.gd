@@ -14,16 +14,15 @@ func _make_item(pos: Vector2) -> Area2D:
 	item.global_position = pos
 	return item
 
-func _pick_up_item(item: Area2D) -> void:
-	player._items_in_range.append(item)
-	player.pick_up_nearest_item()
+func _simulate_item_enters_range(item: Area2D) -> void:
+	player._on_pickup_zone_area_entered(item)
 
 func test_can_drop_returns_false_when_no_zone():
 	assert_false(player.can_drop())
 
 func test_drop_in_tower_zone_sets_turret_state():
 	var item: Area2D = _make_item(Vector2(30, 0))
-	_pick_up_item(item)
+	_simulate_item_enters_range(item)
 	# Since get_current_zone() queries physics overlaps which aren't available in unit tests,
 	# we test the item's drop methods directly to verify state transitions.
 	item.drop()
@@ -31,6 +30,6 @@ func test_drop_in_tower_zone_sets_turret_state():
 
 func test_drop_in_beach_zone_keeps_pickup_state():
 	var item: Area2D = _make_item(Vector2(30, 0))
-	_pick_up_item(item)
+	_simulate_item_enters_range(item)
 	item.drop_as_pickup()
 	assert_eq(item.current_state, item.State.PICKUP)
