@@ -208,3 +208,30 @@ func test_drop_triggers_auto_pickup_of_nearby_items():
 	# Drop active slot item — should auto-pickup extra
 	player.drop_item()
 	assert_eq(player.inventory[0], extra)
+
+# --- Turret reclaim ---
+
+func test_reclaim_turret_stores_in_inventory():
+	var item: Area2D = _make_item(Vector2(30, 0))
+	item.drop()  # TURRET state
+	player.reclaim_turret(item)
+	assert_true(player.inventory.has(item))
+	assert_eq(item.current_state, item.State.INVENTORY)
+
+func test_reclaim_turret_emits_signals():
+	var item: Area2D = _make_item(Vector2(30, 0))
+	item.drop()
+	watch_signals(player)
+	player.reclaim_turret(item)
+	assert_signal_emitted(player, "inventory_changed")
+	assert_signal_emitted(player, "item_picked_up")
+
+func test_reclaim_turret_fails_when_inventory_full():
+	for i in range(8):
+		var filler: Area2D = _make_item(Vector2(30 + i * 10, 0))
+		_simulate_item_enters_range(filler)
+	var turret: Area2D = _make_item(Vector2(200, 0))
+	turret.drop()
+	player.reclaim_turret(turret)
+	assert_false(player.inventory.has(turret))
+	assert_eq(turret.current_state, turret.State.TURRET)
