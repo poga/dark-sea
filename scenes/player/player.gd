@@ -134,9 +134,24 @@ func switch_next() -> void:
 func switch_prev() -> void:
 	switch_to_slot((active_slot - 1 + INVENTORY_SIZE) % INVENTORY_SIZE)
 
+func _try_auto_pickup(item: Area2D) -> void:
+	var slot: int = _find_empty_slot()
+	if slot == -1:
+		return
+	_items_in_range.erase(item)
+	item.get_parent().remove_child(item)
+	item.store_in_inventory()
+	inventory[slot] = item
+	if slot == active_slot:
+		$HoldPosition.add_child(item)
+		item.position = Vector2.ZERO
+	inventory_changed.emit(slot, item)
+	item_picked_up.emit(item)
+
 func _on_pickup_zone_area_entered(area: Area2D):
 	if not inventory.has(area) and area.has_method("pick_up"):
 		_items_in_range.append(area)
+		_try_auto_pickup(area)
 
 func _on_pickup_zone_area_exited(area: Area2D):
 	if not "zone_type" in area:

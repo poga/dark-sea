@@ -195,3 +195,31 @@ func test_switch_next_wraps_around():
 func test_switch_prev_wraps_around():
 	player.switch_prev()
 	assert_eq(player.active_slot, 7)
+
+# --- Auto-pickup helpers ---
+
+func _simulate_item_enters_range(item: Area2D) -> void:
+	player._on_pickup_zone_area_entered(item)
+
+# --- Auto-pickup ---
+
+func test_auto_pickup_on_entering_range():
+	var item: Area2D = _make_item(Vector2(30, 0))
+	_simulate_item_enters_range(item)
+	assert_eq(player.inventory[0], item)
+
+func test_auto_pickup_emits_item_picked_up():
+	var item: Area2D = _make_item(Vector2(30, 0))
+	watch_signals(player)
+	_simulate_item_enters_range(item)
+	assert_signal_emitted(player, "item_picked_up")
+
+func test_auto_pickup_ignored_when_inventory_full():
+	for i in range(8):
+		var item: Area2D = _make_item(Vector2(30 + i * 10, 0))
+		_simulate_item_enters_range(item)
+	var extra: Area2D = _make_item(Vector2(200, 0))
+	_simulate_item_enters_range(extra)
+	assert_false(player.inventory.has(extra))
+	# extra should remain in _items_in_range for later pickup
+	assert_true(player._items_in_range.has(extra))
