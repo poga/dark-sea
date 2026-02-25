@@ -10,14 +10,10 @@ signal active_slot_changed(slot: int)
 
 @export var speed: float = 200.0
 @export var camera_smoothing_speed: float = 5.0
-@export var reclaim_hold_time: float = 1.0
 
 var inventory: Array[Area2D] = []
 var active_slot: int = 0
 var _items_in_range: Array[Area2D] = []
-var _turrets_in_range: Array[Area2D] = []
-var _reclaim_timer: float = 0.0
-var _is_reclaiming: bool = false
 
 func _ready():
 	inventory.resize(INVENTORY_SIZE)
@@ -26,30 +22,12 @@ func _ready():
 	$PickupZone.area_entered.connect(_on_pickup_zone_area_entered)
 	$PickupZone.area_exited.connect(_on_pickup_zone_area_exited)
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	var direction: Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	velocity = direction * speed
 	move_and_slide()
 
-	if _is_reclaiming:
-		_reclaim_timer += delta
-		if _reclaim_timer >= reclaim_hold_time:
-			_is_reclaiming = false
-			_reclaim_timer = 0.0
-			var target: Area2D = _get_nearest_turret()
-			if target:
-				reclaim_turret(target)
-
 func _unhandled_input(event: InputEvent):
-	if event.is_action_pressed("interact"):
-		if not _turrets_in_range.is_empty():
-			_is_reclaiming = true
-			_reclaim_timer = 0.0
-		return
-	if event.is_action_released("interact"):
-		_is_reclaiming = false
-		_reclaim_timer = 0.0
-		return
 	if event.is_action_pressed("drop"):
 		if has_active_item() and can_drop():
 			drop_item()
@@ -138,45 +116,11 @@ func _try_auto_pickup_from_range() -> void:
 			break
 		_try_auto_pickup(item)
 
-func _get_nearest_turret() -> Area2D:
-	var nearest: Area2D = null
-	var nearest_dist: float = INF
-	for turret in _turrets_in_range:
-		if not is_instance_valid(turret):
-			continue
-		var dist: float = global_position.distance_to(turret.global_position)
-		if dist < nearest_dist:
-			nearest_dist = dist
-			nearest = turret
-	return nearest
-
-func reclaim_turret(turret: Area2D) -> void:
-	var slot: int = _find_empty_slot()
-	if slot == -1:
-		return
-	_turrets_in_range.erase(turret)
-	turret.get_parent().remove_child(turret)
-	turret.store_in_inventory()
-	inventory[slot] = turret
-	if slot == active_slot:
-		$HoldPosition.add_child(turret)
-		turret.position = Vector2.ZERO
-	inventory_changed.emit(slot, turret)
-	item_picked_up.emit(turret)
-
 func _on_pickup_zone_area_entered(area: Area2D):
-	if inventory.has(area):
-		return
-	if area.has_method("pick_up") and area.current_state == area.State.PICKUP:
+	if not inventory.has(area) and area.has_method("pick_up") and area.current_state == area.State.PICKUP:
 		_items_in_range.append(area)
 		_try_auto_pickup.call_deferred(area)
-	elif area.has_method("pick_up") and area.current_state == area.State.TURRET:
-		_turrets_in_range.append(area)
 
 func _on_pickup_zone_area_exited(area: Area2D):
 	if not "zone_type" in area:
 		_items_in_range.erase(area)
-		_turrets_in_range.erase(area)
-		if _turrets_in_range.is_empty():
-			_reclaim_timer = 0.0
-			_is_reclaiming = false
