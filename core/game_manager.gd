@@ -4,11 +4,13 @@ signal state_changed(new_state)
 signal day_started
 signal night_started
 signal phase_changed(phase: Phase)
+signal gold_changed(new_amount: int)
 
 enum Phase { DAY, NIGHT }
 
 var state: int = 0
 var current_phase: Phase = Phase.DAY
+var gold: int = 0
 
 @export var day_duration: float = 30.0
 @export var night_duration: float = 30.0
@@ -45,3 +47,7 @@ func _on_phase_timer_timeout() -> void:
 		_phase_timer.wait_time = day_duration
 	phase_changed.emit(current_phase)
 	_phase_timer.start()
+
+func add_gold(amount: int) -> void:
+	gold += amount
+	gold_changed.emit(gold)
