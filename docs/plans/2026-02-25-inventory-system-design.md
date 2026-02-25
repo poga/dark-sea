@@ -53,7 +53,15 @@ Add third state to the enum:
 enum State { PICKUP, TURRET, INVENTORY }
 ```
 
-Each item scene gets an `$InventoryState` node alongside `$PickupState` and `$TurretState`. Designers control how items look in the inventory/toolbar by editing this node.
+Each item scene gets an `$InventoryState` node alongside `$PickupState` and `$TurretState`. Designers control how items look when held above the player's head (active inventory slot) by editing this node.
+
+New export for toolbar icon:
+
+```
+@export var inventory_icon: Texture2D
+```
+
+Designers assign a texture per item type. The toolbar displays this icon in each slot.
 
 New method:
 
@@ -73,10 +81,17 @@ func store_in_inventory() -> void:
 
 ## Toolbar UI (scenes/ui/toolbar.tscn)
 
+Pure lightweight UI — no SubViewports, no item reparenting.
+
 - `HBoxContainer` anchored to bottom-center of screen
-- 8 `Panel` children: slot number, item visual (InventoryState) if occupied, highlight for active slot
+- 8 `PanelContainer` children, each containing: slot number `Label`, `TextureRect` for item's `inventory_icon`
+- Active slot highlighted with distinct style (e.g. border color)
 - `@export var player_path: NodePath` for wiring
 - Connects to `inventory_changed` and `active_slot_changed` signals
+- On `inventory_changed(slot, item)`: update slot's TextureRect from `item.inventory_icon` (or clear if null)
+- On `active_slot_changed(slot)`: move highlight to new slot
+
+Single source of truth: player's `inventory` array. Toolbar reads item properties, never owns items.
 
 ## What Stays the Same
 
