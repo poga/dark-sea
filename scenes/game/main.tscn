@@ -45,9 +45,11 @@ script = ExtResource("6")
 
 [node name="SpawnTimer" type="Timer" parent="TestSpawner"]
 
-[node name="PhaseLabel" type="Label" parent="."]
-offset_left = -250.0
-offset_top = -450.0
-offset_right = -150.0
-offset_bottom = -430.0
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="PhaseLabel" type="Label" parent="UI"]
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 110.0
+offset_bottom = 40.0
 script = ExtResource("10")
