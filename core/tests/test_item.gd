@@ -57,7 +57,7 @@ func test_store_in_inventory_shows_inventory_state_node():
 func test_store_in_inventory_stops_turret_systems():
 	item.drop()  # activate turret
 	item.store_in_inventory()
-	assert_false(item.get_node("TurretState/ShootTimer").is_stopped() == false)
+	assert_true(item.get_node("TurretState/ShootTimer").is_stopped())
 
 func test_pick_up_from_inventory_emits_picked_up_as_item():
 	item.store_in_inventory()
