@@ -22,6 +22,7 @@ func _build_slots() -> void:
 		panel.add_child(vbox)
 		var icon: TextureRect = TextureRect.new()
 		icon.name = "Icon"
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.custom_minimum_size = Vector2(32, 32)
 		vbox.add_child(icon)
