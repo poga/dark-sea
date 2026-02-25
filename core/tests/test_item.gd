@@ -43,3 +43,24 @@ func test_pick_up_from_turret_returns_to_pickup_state():
 	assert_eq(item.current_state, item.State.PICKUP)
 	assert_true(item.get_node("PickupState").visible)
 	assert_false(item.get_node("TurretState").visible)
+
+func test_store_in_inventory_sets_inventory_state():
+	item.store_in_inventory()
+	assert_eq(item.current_state, item.State.INVENTORY)
+
+func test_store_in_inventory_shows_inventory_state_node():
+	item.store_in_inventory()
+	assert_true(item.get_node("InventoryState").visible)
+	assert_false(item.get_node("PickupState").visible)
+	assert_false(item.get_node("TurretState").visible)
+
+func test_store_in_inventory_stops_turret_systems():
+	item.drop()  # activate turret
+	item.store_in_inventory()
+	assert_false(item.get_node("TurretState/ShootTimer").is_stopped() == false)
+
+func test_pick_up_from_inventory_emits_picked_up_as_item():
+	item.store_in_inventory()
+	watch_signals(item)
+	item.pick_up()
+	assert_signal_emitted(item, "picked_up_as_item")

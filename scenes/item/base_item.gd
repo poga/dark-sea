@@ -4,13 +4,14 @@ signal picked_up_as_item
 signal picked_up_as_turret
 signal placed_as_turret
 
-enum State { PICKUP, TURRET }
+enum State { PICKUP, TURRET, INVENTORY }
 
 @export var item_name: String = "Item"
 @export var attack_range: float = 150.0
 @export var attack_rate: float = 1.0
 @export var projectile_speed: float = 300.0
 @export var projectile_damage: float = 10.0
+@export var inventory_icon: Texture2D
 
 var current_state: State = State.PICKUP
 var _monsters_in_range: Array[Area2D] = []
@@ -19,6 +20,7 @@ var _projectile_scene: PackedScene = preload("res://scenes/projectile/projectile
 func _ready():
 	$PickupState/Label.text = item_name
 	$TurretState/Label.text = item_name
+	$InventoryState/Label.text = item_name
 	$TurretState/DetectionArea.area_entered.connect(_on_detection_area_entered)
 	$TurretState/DetectionArea.area_exited.connect(_on_detection_area_exited)
 	$TurretState/ShootTimer.timeout.connect(_on_shoot_timer_timeout)
@@ -26,10 +28,10 @@ func _ready():
 	_update_turret_systems()
 
 func pick_up():
-	if current_state == State.PICKUP:
-		picked_up_as_item.emit()
-	else:
+	if current_state == State.TURRET:
 		picked_up_as_turret.emit()
+	else:
+		picked_up_as_item.emit()
 	current_state = State.PICKUP
 	_monsters_in_range.clear()
 	_update_state_visuals()
@@ -45,6 +47,12 @@ func drop():
 
 func drop_as_pickup() -> void:
 	current_state = State.PICKUP
+	_update_state_visuals()
+	_update_turret_systems()
+
+func store_in_inventory() -> void:
+	current_state = State.INVENTORY
+	_monsters_in_range.clear()
 	_update_state_visuals()
 	_update_turret_systems()
 
@@ -84,6 +92,7 @@ func _on_turret_deactivated() -> void:
 func _update_state_visuals():
 	$PickupState.visible = current_state == State.PICKUP
 	$TurretState.visible = current_state == State.TURRET
+	$InventoryState.visible = current_state == State.INVENTORY
 
 func _update_turret_systems() -> void:
 	var active: bool = current_state == State.TURRET
