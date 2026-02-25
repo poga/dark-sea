@@ -9,8 +9,21 @@ var _monster_scene: PackedScene = preload("res://scenes/monster/monster.tscn")
 
 func _ready() -> void:
 	$SpawnTimer.wait_time = spawn_interval
-	$SpawnTimer.start()
 	$SpawnTimer.timeout.connect(_on_spawn_timer_timeout)
+	GameManager.night_started.connect(_on_night_started)
+	GameManager.day_started.connect(_on_day_started)
+
+func _on_night_started() -> void:
+	$SpawnTimer.start()
+
+func _on_day_started() -> void:
+	$SpawnTimer.stop()
+	_cleanup_monsters()
+
+func _cleanup_monsters() -> void:
+	var monsters_node: Node = get_parent().get_node("Monsters")
+	for monster in monsters_node.get_children():
+		monster.queue_free()
 
 func _on_spawn_timer_timeout() -> void:
 	var monster: Area2D = _monster_scene.instantiate()
