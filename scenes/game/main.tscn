@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/zones/tower_zone.tscn" id="3"]
@@ -11,6 +11,7 @@
 [ext_resource type="Script" path="res://scenes/game/gold_spawner.gd" id="11"]
 [ext_resource type="Script" path="res://scenes/game/gold_label.gd" id="12"]
 [ext_resource type="PackedScene" path="res://scenes/components/NumberLabel/NumberLabel.tscn" id="13"]
+[ext_resource type="PackedScene" path="res://scenes/ui/toolbar.tscn" id="14"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(400, 600)
@@ -68,3 +69,6 @@ position = Vector2(10, 40)
 script = ExtResource("12")
 
 [node name="NumberLabel" parent="UI/GoldLabel" instance=ExtResource("13")]
+
+[node name="Toolbar" parent="UI" instance=ExtResource("14")]
+player_path = NodePath("../../Player")
