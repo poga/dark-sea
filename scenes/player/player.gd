@@ -117,7 +117,7 @@ func _try_auto_pickup_from_range() -> void:
 		_try_auto_pickup(item)
 
 func _on_pickup_zone_area_entered(area: Area2D):
-	if not inventory.has(area) and area.has_method("pick_up"):
+	if not inventory.has(area) and area.has_method("pick_up") and area.current_state == area.State.PICKUP:
 		_items_in_range.append(area)
 		_try_auto_pickup.call_deferred(area)
 
