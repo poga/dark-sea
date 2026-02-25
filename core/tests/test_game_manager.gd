@@ -63,3 +63,18 @@ func test_phase_timer_timeout_transitions_to_night():
 	assert_eq(GameManager.current_phase, GameManager.Phase.NIGHT)
 	assert_signal_emitted(GameManager, "night_started")
 	assert_signal_emitted_with_parameters(GameManager, "phase_changed", [GameManager.Phase.NIGHT])
+
+func test_skip_to_next_phase_transitions_from_day_to_night():
+	GameManager.start_cycle()
+	watch_signals(GameManager)
+	GameManager.skip_to_next_phase()
+	assert_eq(GameManager.current_phase, GameManager.Phase.NIGHT)
+	assert_signal_emitted(GameManager, "night_started")
+
+func test_skip_to_next_phase_transitions_from_night_to_day():
+	GameManager.start_cycle()
+	GameManager._on_phase_timer_timeout()  # go to night
+	watch_signals(GameManager)
+	GameManager.skip_to_next_phase()
+	assert_eq(GameManager.current_phase, GameManager.Phase.DAY)
+	assert_signal_emitted(GameManager, "day_started")

@@ -48,6 +48,10 @@ func _on_phase_timer_timeout() -> void:
 	phase_changed.emit(current_phase)
 	_phase_timer.start()
 
+func skip_to_next_phase() -> void:
+	_phase_timer.stop()
+	_on_phase_timer_timeout()
+
 func add_gold(amount: int) -> void:
 	gold += amount
 	gold_changed.emit(gold)
