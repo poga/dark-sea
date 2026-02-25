@@ -34,6 +34,7 @@ func _unhandled_input(event: InputEvent):
 				drop_item()
 		else:
 			pick_up_nearest_item()
+		return
 	# Direct slot selection (1-8)
 	for i in range(INVENTORY_SIZE):
 		var action_name: String = "slot_%d" % (i + 1)
@@ -113,6 +114,8 @@ func drop_item():
 	item_dropped.emit(item, drop_pos)
 
 func switch_to_slot(slot: int) -> void:
+	if slot < 0 or slot >= INVENTORY_SIZE:
+		return
 	if slot == active_slot:
 		return
 	var old_item: Area2D = inventory[active_slot]
