@@ -1,8 +1,11 @@
-extends Label
+extends Node2D
+
+var _previous_gold: int = 0
 
 func _ready() -> void:
 	GameManager.gold_changed.connect(_on_gold_changed)
-	text = "Gold: 0"
 
 func _on_gold_changed(new_amount: int) -> void:
-	text = "Gold: " + str(new_amount)
+	var delta: int = new_amount - _previous_gold
+	_previous_gold = new_amount
+	$NumberLabel.add(delta)
