@@ -79,3 +79,16 @@ offset_right = 504.0
 offset_bottom = 393.0
 color = Color(0, 0.5921569, 0.7764706, 0.5803922)
 script = ExtResource("15")
+
+[node name="DebugSkipPhase" type="Button" parent="UI"]
+unique_name_in_owner = true
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -80.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+text = ">>"
