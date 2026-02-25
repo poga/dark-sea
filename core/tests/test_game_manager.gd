@@ -2,6 +2,23 @@ extends GutTest
 
 # Barebones GameManager singleton test example
 
+func before_each() -> void:
+	GameManager.gold = 0
+
+func test_add_gold_increases_gold():
+	GameManager.add_gold(5)
+	assert_eq(GameManager.gold, 5)
+
+func test_add_gold_emits_gold_changed():
+	watch_signals(GameManager)
+	GameManager.add_gold(3)
+	assert_signal_emitted_with_parameters(GameManager, "gold_changed", [3])
+
+func test_add_gold_accumulates():
+	GameManager.add_gold(2)
+	GameManager.add_gold(3)
+	assert_eq(GameManager.gold, 5)
+
 func test_increment_state():
 	var initial_state = GameManager.state
 	var result = GameManager.increment_state()

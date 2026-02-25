@@ -1,13 +1,15 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/zones/tower_zone.tscn" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/zones/beach_zone.tscn" id="4"]
 [ext_resource type="PackedScene" path="res://scenes/zones/sea_zone.tscn" id="5"]
-[ext_resource type="Script" path="res://scenes/game/test_spawner.gd" id="6"]
+[ext_resource type="Script" path="res://scenes/game/monster_spawner.gd" id="6"]
 [ext_resource type="Script" path="res://scenes/game/main.gd" id="8"]
 [ext_resource type="Script" path="res://scenes/game/item_spawner.gd" id="9"]
 [ext_resource type="Script" path="res://scenes/game/phase_label.gd" id="10"]
+[ext_resource type="Script" path="res://scenes/game/gold_spawner.gd" id="11"]
+[ext_resource type="Script" path="res://scenes/game/gold_label.gd" id="12"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(400, 600)
@@ -40,10 +42,15 @@ shape = SubResource("RectangleShape2D_1")
 script = ExtResource("9")
 spawn_area_path = NodePath("../ItemSpawnArea")
 
-[node name="TestSpawner" type="Node2D" parent="."]
+[node name="GoldSpawner" type="Node2D" parent="."]
+script = ExtResource("11")
+spawn_area_path = NodePath("../ItemSpawnArea")
+sea_zone_path = NodePath("../Zones/SeaZone")
+
+[node name="MonsterSpawner" type="Node2D" parent="."]
 script = ExtResource("6")
 
-[node name="SpawnTimer" type="Timer" parent="TestSpawner"]
+[node name="SpawnTimer" type="Timer" parent="MonsterSpawner"]
 
 [node name="UI" type="CanvasLayer" parent="."]
 
@@ -53,3 +60,10 @@ offset_top = 10.0
 offset_right = 110.0
 offset_bottom = 40.0
 script = ExtResource("10")
+
+[node name="GoldLabel" type="Label" parent="UI"]
+offset_left = 10.0
+offset_top = 40.0
+offset_right = 150.0
+offset_bottom = 70.0
+script = ExtResource("12")

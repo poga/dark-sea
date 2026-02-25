@@ -75,7 +75,7 @@ func drop_item():
 func _on_pickup_zone_area_entered(area: Area2D):
 	if "zone_type" in area:
 		current_zone = area.zone_type
-	elif area != held_item:
+	elif area != held_item and area.has_method("pick_up"):
 		_items_in_range.append(area)
 
 func _on_pickup_zone_area_exited(area: Area2D):
