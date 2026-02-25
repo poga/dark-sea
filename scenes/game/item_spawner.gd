@@ -6,8 +6,10 @@ extends Node2D
 
 @export var spawn_area_path: NodePath
 @export var sea_zone_path: NodePath
+@export var tide_path: NodePath
 var spawn_area: Area2D
 var _sea_zone: Area2D
+var _tide: ColorRect
 
 # --- Item pool: edit this to change what spawns ---
 # Each entry has a scene and a weight (higher = more likely).
@@ -27,14 +29,24 @@ func _ready() -> void:
 		spawn_area = get_node(spawn_area_path) as Area2D
 	if sea_zone_path:
 		_sea_zone = get_node(sea_zone_path) as Area2D
+	if tide_path:
+		_tide = get_node(tide_path) as ColorRect
+		_tide.tide_position_changed.connect(_on_tide_position_changed)
+		_tide.tide_risen.connect(_on_tide_risen)
 	GameManager.day_started.connect(_on_day_started)
 	GameManager.night_started.connect(_on_night_started)
 
 func _on_day_started() -> void:
 	_spawn_items()
+	# Hide all newly spawned PICKUP items — tide ebb will reveal them
+	if _tide:
+		for item in _spawned_items:
+			if is_instance_valid(item) and item.current_state == item.State.PICKUP:
+				item.visible = false
 
 func _on_night_started() -> void:
-	_cleanup_uncollected_items()
+	if _tide == null:
+		_cleanup_uncollected_items()
 
 func _spawn_items() -> void:
 	if spawn_area == null:
@@ -87,3 +99,14 @@ func _cleanup_uncollected_items() -> void:
 		else:
 			remaining.append(item)
 	_spawned_items = remaining
+
+func _on_tide_position_changed(left_edge_x: float) -> void:
+	for item in _spawned_items:
+		if not is_instance_valid(item):
+			continue
+		if item.current_state != item.State.PICKUP:
+			continue
+		item.visible = item.global_position.x < left_edge_x
+
+func _on_tide_risen() -> void:
+	_cleanup_uncollected_items()
