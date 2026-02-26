@@ -185,6 +185,35 @@ func test_snap_to_cardinal_zero_returns_current_facing():
 	player.facing_direction = Vector2.UP
 	assert_eq(player.snap_to_cardinal(Vector2.ZERO), Vector2.UP)
 
+# --- Directional drop ---
+
+func test_get_drop_position_uses_facing_and_distance():
+	player.global_position = Vector2(100, 100)
+	player.facing_direction = Vector2.RIGHT
+	player.drop_distance = 80.0
+	assert_eq(player.get_drop_position(), Vector2(180, 100))
+
+func test_get_drop_position_facing_left():
+	player.global_position = Vector2(100, 100)
+	player.facing_direction = Vector2.LEFT
+	player.drop_distance = 80.0
+	assert_eq(player.get_drop_position(), Vector2(20, 100))
+
+func test_get_drop_position_facing_up():
+	player.global_position = Vector2(100, 100)
+	player.facing_direction = Vector2.UP
+	player.drop_distance = 80.0
+	assert_eq(player.get_drop_position(), Vector2(100, 20))
+
+func test_drop_item_places_at_drop_position():
+	var item: Area2D = _make_item(Vector2(30, 0))
+	_simulate_item_enters_range(item)
+	player.global_position = Vector2(100, 100)
+	player.facing_direction = Vector2.RIGHT
+	player.drop_distance = 80.0
+	player.drop_item()
+	assert_eq(item.global_position, Vector2(180, 100))
+
 # --- Auto-pickup helpers ---
 
 func _simulate_item_enters_range(item: Area2D) -> void:

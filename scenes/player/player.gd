@@ -77,11 +77,14 @@ func get_current_zone():
 func can_drop() -> bool:
 	return get_current_zone() == ZoneScript.ZoneType.TOWER
 
+func get_drop_position() -> Vector2:
+	return global_position + facing_direction * drop_distance
+
 func drop_item():
 	var item: Area2D = inventory[active_slot]
 	if item == null:
 		return
-	var drop_pos: Vector2 = global_position
+	var drop_pos: Vector2 = get_drop_position()
 	inventory[active_slot] = null
 	item.drop()
 	$HoldPosition.remove_child(item)
