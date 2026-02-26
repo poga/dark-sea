@@ -16,10 +16,13 @@ var facing_direction: Vector2 = Vector2.RIGHT
 var inventory: Array[Area2D] = []
 var active_slot: int = 0
 var _items_in_range: Array[Area2D] = []
+var _drop_check_shape: CircleShape2D
 
 func _ready():
 	inventory.resize(INVENTORY_SIZE)
 	inventory.fill(null)
+	_drop_check_shape = CircleShape2D.new()
+	_drop_check_shape.radius = 20.0
 	$Camera2D.position_smoothing_speed = camera_smoothing_speed
 	$PickupZone.area_entered.connect(_on_pickup_zone_area_entered)
 	$PickupZone.area_exited.connect(_on_pickup_zone_area_exited)
@@ -87,9 +90,7 @@ func can_drop() -> bool:
 	var drop_pos: Vector2 = get_drop_position()
 	var space_state: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
 	var query := PhysicsShapeQueryParameters2D.new()
-	var shape := CircleShape2D.new()
-	shape.radius = 20.0
-	query.shape = shape
+	query.shape = _drop_check_shape
 	query.transform = Transform2D(0, drop_pos)
 	query.collide_with_areas = true
 	query.collide_with_bodies = false
