@@ -237,10 +237,74 @@ func test_drop_item_places_at_drop_position():
 	player.drop_item()
 	assert_eq(item.global_position, Vector2(180, 100))
 
+# --- can_drop overlap ---
+
+func test_can_drop_false_when_turret_overlaps_drop_position():
+	# Place a turret at where the player would drop
+	var turret: Area2D = _make_item(Vector2.ZERO)
+	turret.drop()  # Set to TURRET state
+	var drop_pos: Vector2 = player.get_drop_position()
+	turret.global_position = drop_pos
+
+	# Need physics to register the collision shapes
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+
+	assert_false(player.can_drop(), "should not drop on top of existing turret")
+
+func test_can_drop_true_when_turret_far_from_drop_position():
+	# Place a turret far away from drop position
+	var turret: Area2D = _make_item(Vector2.ZERO)
+	turret.drop()  # Set to TURRET state
+	turret.global_position = Vector2(9999, 9999)
+
+	# Add a tower zone at the drop position so zone check passes
+	var zone: Area2D = _make_tower_zone(player.get_drop_position())
+
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+
+	assert_true(player.can_drop(), "should allow drop when no turret overlaps")
+
+func test_can_drop_false_when_turret_overlaps_even_in_tower_zone():
+	# Place a tower zone at the drop position
+	var zone: Area2D = _make_tower_zone(player.get_drop_position())
+
+	# Place a turret at the same drop position
+	var turret: Area2D = _make_item(Vector2.ZERO)
+	turret.drop()
+	turret.global_position = player.get_drop_position()
+
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+
+	assert_false(player.can_drop(), "should not drop on turret even inside tower zone")
+
 # --- Auto-pickup helpers ---
 
 func _simulate_item_enters_range(item: Area2D) -> void:
 	player._on_pickup_zone_area_entered(item)
+
+func _make_tower_zone(pos: Vector2) -> Area2D:
+	var zone := Area2D.new()
+	zone.set_script(preload("res://scenes/zones/zone.gd"))
+	zone.zone_type = zone.ZoneType.TOWER
+	var shape := CollisionShape2D.new()
+	shape.name = "CollisionShape2D"
+	var circle := CircleShape2D.new()
+	circle.radius = 200.0
+	shape.shape = circle
+	zone.add_child(shape)
+	# zone.gd _ready() expects ColorRect and Label children
+	var rect := ColorRect.new()
+	rect.name = "ColorRect"
+	zone.add_child(rect)
+	var label := Label.new()
+	label.name = "Label"
+	zone.add_child(label)
+	add_child_autofree(zone)
+	zone.global_position = pos
+	return zone
 
 # --- Auto-pickup ---
 
