@@ -64,3 +64,6 @@ func test_pick_up_from_inventory_emits_picked_up_as_item():
 	watch_signals(item)
 	item.pick_up()
 	assert_signal_emitted(item, "picked_up_as_item")
+
+func test_use_returns_true_by_default():
+	assert_true(item.use(null))

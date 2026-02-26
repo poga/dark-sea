@@ -87,6 +87,9 @@ func _on_turret_activated() -> void:
 func _on_turret_deactivated() -> void:
 	pass
 
+func use(_player: CharacterBody2D) -> bool:
+	return true
+
 # --- Internal methods ---
 
 func _update_state_visuals():
