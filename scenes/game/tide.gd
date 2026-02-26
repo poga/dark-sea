@@ -13,6 +13,7 @@ var _width: float
 var _tween: Tween
 
 func _ready() -> void:
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_full_left = offset_left
 	_width = offset_right - offset_left
 	GameManager.day_started.connect(_start_ebb)

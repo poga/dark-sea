@@ -8,8 +8,10 @@ enum ZoneType { TOWER, SEA }
 @export var zone_height: float = 800.0
 
 func _ready() -> void:
+	$ColorRect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	$ColorRect.color = zone_color
 	$ColorRect.size = Vector2(zone_width, zone_height)
 	$ColorRect.position = Vector2(-zone_width / 2, -zone_height / 2)
+	$Label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	$CollisionShape2D.shape = RectangleShape2D.new()
 	$CollisionShape2D.shape.size = Vector2(zone_width, zone_height)
