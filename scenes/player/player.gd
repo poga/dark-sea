@@ -35,6 +35,15 @@ func _physics_process(_delta):
 		look = get_global_mouse_position() - global_position
 	facing_direction = snap_to_cardinal(look)
 
+	# Update drop preview
+	var preview: Node2D = $DropPreview
+	if has_active_item():
+		preview.visible = true
+		preview.global_position = get_drop_position()
+		preview.update_state(can_drop())
+	else:
+		preview.visible = false
+
 func snap_to_cardinal(raw: Vector2) -> Vector2:
 	if raw.is_zero_approx():
 		return facing_direction
