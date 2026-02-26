@@ -41,5 +41,6 @@ position_smoothing_enabled = true
 position_smoothing_speed = 5.0
 
 [node name="DropPreview" type="Node2D" parent="."]
+z_index = 10
 script = ExtResource("3")
 visible = false
