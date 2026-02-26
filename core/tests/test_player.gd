@@ -240,6 +240,9 @@ func test_drop_item_places_at_drop_position():
 # --- can_drop overlap ---
 
 func test_can_drop_false_when_turret_overlaps_drop_position():
+	# Freeze facing so _physics_process doesn't shift drop position
+	player.set_physics_process(false)
+	player.facing_direction = Vector2.RIGHT
 	# Place a turret at where the player would drop
 	var turret: Area2D = _make_item(Vector2.ZERO)
 	turret.drop()  # Set to TURRET state
@@ -253,6 +256,9 @@ func test_can_drop_false_when_turret_overlaps_drop_position():
 	assert_false(player.can_drop(), "should not drop on top of existing turret")
 
 func test_can_drop_true_when_turret_far_from_drop_position():
+	# Freeze facing so _physics_process doesn't shift drop position
+	player.set_physics_process(false)
+	player.facing_direction = Vector2.RIGHT
 	# Place a turret far away from drop position
 	var turret: Area2D = _make_item(Vector2.ZERO)
 	turret.drop()  # Set to TURRET state
@@ -267,6 +273,9 @@ func test_can_drop_true_when_turret_far_from_drop_position():
 	assert_true(player.can_drop(), "should allow drop when no turret overlaps")
 
 func test_can_drop_false_when_turret_overlaps_even_in_tower_zone():
+	# Freeze facing so _physics_process doesn't shift drop position
+	player.set_physics_process(false)
+	player.facing_direction = Vector2.RIGHT
 	# Place a tower zone at the drop position
 	var zone: Area2D = _make_tower_zone(player.get_drop_position())
 

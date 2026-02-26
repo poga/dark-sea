@@ -86,16 +86,22 @@ func get_current_zone():
 func can_drop() -> bool:
 	var drop_pos: Vector2 = get_drop_position()
 	var space_state: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
-	var query := PhysicsPointQueryParameters2D.new()
-	query.position = drop_pos
+	var query := PhysicsShapeQueryParameters2D.new()
+	var shape := CircleShape2D.new()
+	shape.radius = 20.0
+	query.shape = shape
+	query.transform = Transform2D(0, drop_pos)
 	query.collide_with_areas = true
 	query.collide_with_bodies = false
-	var results: Array[Dictionary] = space_state.intersect_point(query)
+	var results: Array[Dictionary] = space_state.intersect_shape(query)
+	var in_tower_zone: bool = false
 	for result in results:
 		var collider = result["collider"]
 		if "zone_type" in collider and collider.zone_type == ZoneScript.ZoneType.TOWER:
-			return true
-	return false
+			in_tower_zone = true
+		if collider is Area2D and collider.has_method("pick_up") and collider.current_state == collider.State.TURRET:
+			return false
+	return in_tower_zone
 
 func get_drop_position() -> Vector2:
 	return global_position + facing_direction * drop_distance
