@@ -29,6 +29,12 @@ func _physics_process(_delta):
 	velocity = direction * speed
 	move_and_slide()
 
+	# Update facing direction: joystick overrides mouse
+	var look: Vector2 = Input.get_vector("look_left", "look_right", "look_up", "look_down")
+	if look.is_zero_approx():
+		look = get_global_mouse_position() - global_position
+	facing_direction = snap_to_cardinal(look)
+
 func snap_to_cardinal(raw: Vector2) -> Vector2:
 	if raw.is_zero_approx():
 		return facing_direction
