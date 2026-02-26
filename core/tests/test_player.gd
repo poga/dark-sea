@@ -160,6 +160,31 @@ func test_switch_prev_wraps_around():
 	player.switch_prev()
 	assert_eq(player.active_slot, 7)
 
+# --- Facing direction ---
+
+func test_facing_direction_default_is_right():
+	assert_eq(player.facing_direction, Vector2.RIGHT)
+
+func test_snap_to_cardinal_right():
+	assert_eq(player.snap_to_cardinal(Vector2(3.0, 1.0)), Vector2.RIGHT)
+
+func test_snap_to_cardinal_left():
+	assert_eq(player.snap_to_cardinal(Vector2(-3.0, 1.0)), Vector2.LEFT)
+
+func test_snap_to_cardinal_up():
+	assert_eq(player.snap_to_cardinal(Vector2(1.0, -3.0)), Vector2.UP)
+
+func test_snap_to_cardinal_down():
+	assert_eq(player.snap_to_cardinal(Vector2(1.0, 3.0)), Vector2.DOWN)
+
+func test_snap_to_cardinal_diagonal_prefers_horizontal():
+	# When abs(x) == abs(y), horizontal wins
+	assert_eq(player.snap_to_cardinal(Vector2(1.0, 1.0)), Vector2.RIGHT)
+
+func test_snap_to_cardinal_zero_returns_current_facing():
+	player.facing_direction = Vector2.UP
+	assert_eq(player.snap_to_cardinal(Vector2.ZERO), Vector2.UP)
+
 # --- Auto-pickup helpers ---
 
 func _simulate_item_enters_range(item: Area2D) -> void:

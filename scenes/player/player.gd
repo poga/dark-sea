@@ -10,7 +10,9 @@ signal active_slot_changed(slot: int)
 
 @export var speed: float = 200.0
 @export var camera_smoothing_speed: float = 5.0
+@export var drop_distance: float = 80.0
 
+var facing_direction: Vector2 = Vector2.RIGHT
 var inventory: Array[Area2D] = []
 var active_slot: int = 0
 var _items_in_range: Array[Area2D] = []
@@ -26,6 +28,14 @@ func _physics_process(_delta):
 	var direction: Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	velocity = direction * speed
 	move_and_slide()
+
+func snap_to_cardinal(raw: Vector2) -> Vector2:
+	if raw.is_zero_approx():
+		return facing_direction
+	if absf(raw.x) >= absf(raw.y):
+		return Vector2.RIGHT if raw.x >= 0 else Vector2.LEFT
+	else:
+		return Vector2.DOWN if raw.y >= 0 else Vector2.UP
 
 func _unhandled_input(event: InputEvent):
 	if event.is_action_pressed("drop"):
