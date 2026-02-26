@@ -126,6 +126,21 @@ func test_use_item_calls_item_use_and_drops():
 	player.use_item()
 	assert_null(player.inventory[0])
 
+func test_use_item_skips_drop_when_use_returns_false():
+	var item: Area2D = _make_item(Vector2(30, 0))
+	# Override use() to return false (simulating custom item behavior)
+	var script: GDScript = GDScript.new()
+	script.source_code = """extends "res://scenes/item/base_item.gd"
+func use(_player: CharacterBody2D) -> bool:
+	return false
+"""
+	script.reload()
+	item.set_script(script)
+	_simulate_item_enters_range(item)
+	player.use_item()
+	# Item should still be in inventory because use() returned false
+	assert_true(player.inventory[0] == item, "item should remain in inventory when use() returns false")
+
 # --- Slot switching ---
 
 func test_switch_slot_changes_active_slot():
