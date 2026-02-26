@@ -75,7 +75,18 @@ func get_current_zone():
 	return null
 
 func can_drop() -> bool:
-	return get_current_zone() == ZoneScript.ZoneType.TOWER
+	var drop_pos: Vector2 = get_drop_position()
+	var space_state: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
+	var query := PhysicsPointQueryParameters2D.new()
+	query.position = drop_pos
+	query.collide_with_areas = true
+	query.collide_with_bodies = false
+	var results: Array[Dictionary] = space_state.intersect_point(query)
+	for result in results:
+		var collider = result["collider"]
+		if "zone_type" in collider and collider.zone_type == ZoneScript.ZoneType.TOWER:
+			return true
+	return false
 
 func get_drop_position() -> Vector2:
 	return global_position + facing_direction * drop_distance
