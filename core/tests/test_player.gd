@@ -118,6 +118,14 @@ func test_has_active_item_true_when_holding():
 func test_has_active_item_false_when_empty():
 	assert_false(player.has_active_item())
 
+# --- Use action ---
+
+func test_use_item_calls_item_use_and_drops():
+	var item: Area2D = _make_item(Vector2(30, 0))
+	_simulate_item_enters_range(item)
+	player.use_item()
+	assert_null(player.inventory[0])
+
 # --- Slot switching ---
 
 func test_switch_slot_changes_active_slot():

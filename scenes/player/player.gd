@@ -53,9 +53,9 @@ func snap_to_cardinal(raw: Vector2) -> Vector2:
 		return Vector2.DOWN if raw.y >= 0 else Vector2.UP
 
 func _unhandled_input(event: InputEvent):
-	if event.is_action_pressed("drop"):
+	if event.is_action_pressed("use"):
 		if has_active_item() and can_drop():
-			drop_item()
+			use_item()
 		return
 	# Direct slot selection (1-8)
 	for i in range(INVENTORY_SIZE):
@@ -113,6 +113,13 @@ func drop_item():
 	inventory_changed.emit(active_slot, null)
 	item_dropped.emit(item, drop_pos)
 	_try_auto_pickup_from_range()
+
+func use_item():
+	var item: Area2D = inventory[active_slot]
+	if item == null:
+		return
+	if item.use(self):
+		drop_item()
 
 func switch_to_slot(slot: int) -> void:
 	if slot < 0 or slot >= INVENTORY_SIZE:
