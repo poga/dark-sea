@@ -50,21 +50,6 @@ Not all work requires a Linear ticket. This workflow only applies when a ticket 
 - Extend Node for signal capability
 - Global access pattern: `GameManager.method_name()`
 
-## Mobile Display Settings (project.godot)
-For portrait mobile games on web (itch.io):
-```
-[display]
-window/size/viewport_width=540
-window/size/viewport_height=960
-window/stretch/mode="canvas_items"
-window/stretch/aspect="keep_height"
-window/handheld/orientation=1
-```
-- `orientation=1` locks to portrait
-- `keep_height` maintains vertical design, expands width to fill screen
-- Avoid `scale_mode="integer"` - causes letterboxing on non-matching screens
-
-
 # Architecture Examples
 
 **Signal-driven updates**: GameManager singleton emits signals → UI scenes react.
