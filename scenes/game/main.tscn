@@ -70,7 +70,7 @@ script = ExtResource("12")
 [node name="NumberLabel" parent="UI/GoldLabel" unique_id=1092108145 instance=ExtResource("13")]
 
 [node name="Toolbar" parent="UI" unique_id=1711227204 instance=ExtResource("14")]
-player_path = NodePath("../../Player")
+
 
 [node name="Tide" type="ColorRect" parent="." unique_id=1481333432]
 offset_left = 100.0
