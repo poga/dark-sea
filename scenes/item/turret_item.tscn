@@ -1,0 +1,77 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scenes/item/turret_item.gd" id="1"]
+[ext_resource type="Texture2D" path="res://icon.svg" id="2"]
+
+[sub_resource type="CircleShape2D" id="SubResource_1"]
+radius = 20.0
+
+[sub_resource type="CircleShape2D" id="SubResource_2"]
+radius = 150.0
+
+[node name="Item" type="Area2D"]
+script = ExtResource("1")
+item_name = "Turret"
+inventory_icon = ExtResource("2")
+
+[node name="PickupState" type="Node2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="PickupState"]
+texture = ExtResource("2")
+scale = Vector2(0.5, 0.5)
+
+[node name="Label" type="Label" parent="PickupState"]
+offset_left = -40.0
+offset_top = -55.0
+offset_right = 40.0
+offset_bottom = -35.0
+horizontal_alignment = 1
+text = "Turret"
+
+[node name="TurretState" type="Node2D" parent="."]
+visible = false
+
+[node name="Sprite2D" type="Sprite2D" parent="TurretState"]
+texture = ExtResource("2")
+scale = Vector2(0.5, 0.5)
+modulate = Color(1, 0.5, 0.5, 1)
+
+[node name="Label" type="Label" parent="TurretState"]
+offset_left = -40.0
+offset_top = -55.0
+offset_right = 40.0
+offset_bottom = -35.0
+horizontal_alignment = 1
+text = "Turret"
+
+[node name="DetectionArea" type="Area2D" parent="TurretState"]
+collision_layer = 0
+collision_mask = 4
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TurretState/DetectionArea"]
+shape = SubResource("SubResource_2")
+
+[node name="ShootTimer" type="Timer" parent="TurretState"]
+wait_time = 1.0
+one_shot = false
+autostart = false
+
+[node name="InventoryState" type="Node2D" parent="."]
+visible = false
+
+[node name="Sprite2D" type="Sprite2D" parent="InventoryState"]
+texture = ExtResource("2")
+scale = Vector2(0.3, 0.3)
+modulate = Color(0.5, 1, 0.5, 1)
+
+[node name="Label" type="Label" parent="InventoryState"]
+offset_left = -40.0
+offset_top = -45.0
+offset_right = 40.0
+offset_bottom = -25.0
+horizontal_alignment = 1
+text = "Turret"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("SubResource_1")

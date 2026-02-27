@@ -125,7 +125,8 @@ func use_item():
 	var item: Area2D = inventory[active_slot]
 	if item == null:
 		return
-	if item.use(self):
+	var result: int = item.use({})
+	if result == item.UseResult.PLACE:
 		drop_item()
 
 func switch_to_slot(slot: int) -> void:
