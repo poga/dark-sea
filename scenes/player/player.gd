@@ -66,7 +66,7 @@ func switch_to_slot(slot: int) -> void:
 func _on_pickup_zone_area_entered(area: Area2D):
 	if area.has_method("pick_up") and area.current_state == area.State.PICKUP:
 		_items_in_range.append(area)
-		GameManager.try_pickup(area)
+		GameManager.try_pickup.call_deferred(area)
 
 func _on_pickup_zone_area_exited(area: Area2D):
 	if not "zone_type" in area:
