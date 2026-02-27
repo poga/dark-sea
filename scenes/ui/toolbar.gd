@@ -1,21 +1,17 @@
 extends HBoxContainer
 
-@export var player_path: NodePath
-
-var _player: CharacterBody2D
 var _slots: Array[PanelContainer] = []
 var _icons: Array[TextureRect] = []
 
 func _ready():
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_player = get_node(player_path)
-	_player.inventory_changed.connect(_on_inventory_changed)
-	_player.active_slot_changed.connect(_on_active_slot_changed)
+	GameManager.inventory_changed.connect(_on_inventory_changed)
+	GameManager.active_slot_changed.connect(_on_active_slot_changed)
 	_build_slots()
 	_update_active_highlight()
 
 func _build_slots() -> void:
-	for i in range(_player.INVENTORY_SIZE):
+	for i in range(GameManager.INVENTORY_SIZE):
 		var panel: PanelContainer = PanelContainer.new()
 		panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		panel.custom_minimum_size = Vector2(48, 48)
@@ -53,7 +49,7 @@ func _on_active_slot_changed(slot: int) -> void:
 func _update_active_highlight() -> void:
 	for i in range(_slots.size()):
 		var panel: PanelContainer = _slots[i]
-		if i == _player.active_slot:
+		if i == GameManager.active_slot:
 			panel.modulate = Color(1, 1, 0.5, 1)
 		else:
 			panel.modulate = Color(1, 1, 1, 0.7)
