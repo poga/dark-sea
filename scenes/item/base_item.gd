@@ -5,6 +5,7 @@ signal picked_up_as_turret
 signal placed_as_turret
 
 enum State { PICKUP, TURRET, INVENTORY }
+enum UseResult { NOTHING, KEEP, CONSUME, PLACE }
 
 @export var item_name: String = "Item"
 @export var attack_range: float = 150.0
@@ -89,6 +90,15 @@ func _on_turret_deactivated() -> void:
 
 func use(_player: CharacterBody2D) -> bool:
 	return true
+
+func can_use(_context: Dictionary) -> bool:
+	return true
+
+func has_preview() -> bool:
+	return false
+
+func get_preview_position(context: Dictionary) -> Vector2:
+	return context.target_position
 
 # --- Internal methods ---
 
