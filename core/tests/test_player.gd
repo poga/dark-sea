@@ -53,6 +53,7 @@ func test_get_drop_position_left():
 func test_pickup_zone_delegates_to_game_manager():
 	var item: Area2D = _make_item()
 	_simulate_item_enters_range(item)
+	await get_tree().process_frame
 	assert_eq(GameManager.inventory[0], item)
 
 func test_pickup_zone_ignores_non_pickup_items():
