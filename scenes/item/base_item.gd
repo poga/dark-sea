@@ -88,8 +88,8 @@ func _on_turret_activated() -> void:
 func _on_turret_deactivated() -> void:
 	pass
 
-func use(_player: CharacterBody2D) -> bool:
-	return true
+func use(_context: Dictionary) -> int:
+	return UseResult.NOTHING
 
 func can_use(_context: Dictionary) -> bool:
 	return true

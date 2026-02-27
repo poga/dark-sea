@@ -65,8 +65,8 @@ func test_pick_up_from_inventory_emits_picked_up_as_item():
 	item.pick_up()
 	assert_signal_emitted(item, "picked_up_as_item")
 
-func test_use_returns_true_by_default():
-	assert_true(item.use(null))
+func test_use_returns_nothing_by_default():
+	assert_eq(item.use({}), item.UseResult.NOTHING)
 
 func test_use_result_enum_exists():
 	assert_eq(item.UseResult.NOTHING, 0)
