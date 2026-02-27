@@ -67,3 +67,19 @@ func test_pick_up_from_inventory_emits_picked_up_as_item():
 
 func test_use_returns_true_by_default():
 	assert_true(item.use(null))
+
+func test_use_result_enum_exists():
+	assert_eq(item.UseResult.NOTHING, 0)
+	assert_eq(item.UseResult.KEEP, 1)
+	assert_eq(item.UseResult.CONSUME, 2)
+	assert_eq(item.UseResult.PLACE, 3)
+
+func test_can_use_returns_true_by_default():
+	assert_true(item.can_use({}))
+
+func test_has_preview_returns_false_by_default():
+	assert_false(item.has_preview())
+
+func test_get_preview_position_returns_target():
+	var ctx: Dictionary = {"target_position": Vector2(100, 200)}
+	assert_eq(item.get_preview_position(ctx), Vector2(100, 200))
