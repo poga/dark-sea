@@ -1,4 +1,4 @@
-extends "res://scenes/item/base_item.gd"
+extends "res://scenes/item/turret_item.gd"
 
 @export var explosion_radius: float = 80.0
 
