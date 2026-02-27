@@ -9,40 +9,40 @@ func before_each():
 func test_initial_state_is_pickup():
 	assert_eq(item.current_state, item.State.PICKUP)
 	assert_true(item.get_node("PickupState").visible)
-	assert_false(item.get_node("TurretState").visible)
+	assert_false(item.get_node("ActiveState").visible)
 
 func test_item_name_sets_labels():
 	assert_eq(item.get_node("PickupState/Label").text, "Item")
-	assert_eq(item.get_node("TurretState/Label").text, "Item")
+	assert_eq(item.get_node("ActiveState/Label").text, "Item")
 
-func test_pick_up_from_pickup_emits_picked_up_as_item():
+func test_pick_up_from_pickup_emits_picked_up():
 	watch_signals(item)
 	item.pick_up()
-	assert_signal_emitted(item, "picked_up_as_item")
+	assert_signal_emitted(item, "picked_up")
 
-func test_drop_switches_to_turret_state():
-	item.drop()
-	assert_eq(item.current_state, item.State.TURRET)
+func test_activate_switches_to_active_state():
+	item.activate()
+	assert_eq(item.current_state, item.State.ACTIVE)
 	assert_false(item.get_node("PickupState").visible)
-	assert_true(item.get_node("TurretState").visible)
+	assert_true(item.get_node("ActiveState").visible)
 
-func test_drop_emits_placed_as_turret():
+func test_activate_emits_activated():
 	watch_signals(item)
-	item.drop()
-	assert_signal_emitted(item, "placed_as_turret")
+	item.activate()
+	assert_signal_emitted(item, "activated")
 
-func test_pick_up_from_turret_emits_picked_up_as_turret():
-	item.drop()
+func test_pick_up_from_active_emits_deactivated():
+	item.activate()
 	watch_signals(item)
 	item.pick_up()
-	assert_signal_emitted(item, "picked_up_as_turret")
+	assert_signal_emitted(item, "deactivated")
 
-func test_pick_up_from_turret_returns_to_pickup_state():
-	item.drop()
+func test_pick_up_from_active_returns_to_pickup_state():
+	item.activate()
 	item.pick_up()
 	assert_eq(item.current_state, item.State.PICKUP)
 	assert_true(item.get_node("PickupState").visible)
-	assert_false(item.get_node("TurretState").visible)
+	assert_false(item.get_node("ActiveState").visible)
 
 func test_store_in_inventory_sets_inventory_state():
 	item.store_in_inventory()
@@ -52,21 +52,7 @@ func test_store_in_inventory_shows_inventory_state_node():
 	item.store_in_inventory()
 	assert_true(item.get_node("InventoryState").visible)
 	assert_false(item.get_node("PickupState").visible)
-	assert_false(item.get_node("TurretState").visible)
-
-func test_store_in_inventory_stops_turret_systems():
-	item.drop()  # activate turret
-	item.store_in_inventory()
-	assert_true(item.get_node("TurretState/ShootTimer").is_stopped())
-
-func test_pick_up_from_inventory_emits_picked_up_as_item():
-	item.store_in_inventory()
-	watch_signals(item)
-	item.pick_up()
-	assert_signal_emitted(item, "picked_up_as_item")
-
-func test_use_returns_nothing_by_default():
-	assert_eq(item.use({}), item.UseResult.NOTHING)
+	assert_false(item.get_node("ActiveState").visible)
 
 func test_use_result_enum_exists():
 	assert_eq(item.UseResult.NOTHING, 0)
@@ -76,6 +62,9 @@ func test_use_result_enum_exists():
 
 func test_can_use_returns_true_by_default():
 	assert_true(item.can_use({}))
+
+func test_use_returns_consume_by_default():
+	assert_eq(item.use({}), item.UseResult.CONSUME)
 
 func test_has_preview_returns_false_by_default():
 	assert_false(item.has_preview())

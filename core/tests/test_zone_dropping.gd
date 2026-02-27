@@ -26,4 +26,4 @@ func test_drop_in_tower_zone_sets_turret_state():
 	# Since get_current_zone() queries physics overlaps which aren't available in unit tests,
 	# we test the item's drop methods directly to verify state transitions.
 	item.drop()
-	assert_eq(item.current_state, item.State.TURRET)
+	assert_eq(item.current_state, item.State.ACTIVE)

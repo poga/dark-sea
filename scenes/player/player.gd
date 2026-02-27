@@ -100,7 +100,7 @@ func can_drop() -> bool:
 		var collider = result["collider"]
 		if "zone_type" in collider and collider.zone_type == ZoneScript.ZoneType.TOWER:
 			in_tower_zone = true
-		if collider is Area2D and collider.has_method("pick_up") and collider.current_state == collider.State.TURRET:
+		if collider is Area2D and collider.has_method("pick_up") and collider.current_state == collider.State.ACTIVE:
 			return false
 	return in_tower_zone
 

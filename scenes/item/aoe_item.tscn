@@ -28,15 +28,15 @@ offset_bottom = -35.0
 horizontal_alignment = 1
 text = "AOE Item"
 
-[node name="TurretState" type="Node2D" parent="."]
+[node name="ActiveState" type="Node2D" parent="."]
 visible = false
 
-[node name="Sprite2D" type="Sprite2D" parent="TurretState"]
+[node name="Sprite2D" type="Sprite2D" parent="ActiveState"]
 texture = ExtResource("2")
 scale = Vector2(0.5, 0.5)
 modulate = Color(0.5, 0.5, 1, 1)
 
-[node name="Label" type="Label" parent="TurretState"]
+[node name="Label" type="Label" parent="ActiveState"]
 offset_left = -40.0
 offset_top = -55.0
 offset_right = 40.0
@@ -44,15 +44,15 @@ offset_bottom = -35.0
 horizontal_alignment = 1
 text = "AOE Turret"
 
-[node name="DetectionArea" type="Area2D" parent="TurretState"]
+[node name="DetectionArea" type="Area2D" parent="ActiveState"]
 collision_layer = 0
 collision_mask = 4
 monitoring = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="TurretState/DetectionArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ActiveState/DetectionArea"]
 shape = SubResource("SubResource_2")
 
-[node name="ShootTimer" type="Timer" parent="TurretState"]
+[node name="ShootTimer" type="Timer" parent="ActiveState"]
 wait_time = 1.0
 one_shot = false
 autostart = false

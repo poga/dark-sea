@@ -245,7 +245,7 @@ func test_can_drop_false_when_turret_overlaps_drop_position():
 	player.facing_direction = Vector2.RIGHT
 	# Place a turret at where the player would drop
 	var turret: Area2D = _make_item(Vector2.ZERO)
-	turret.drop()  # Set to TURRET state
+	turret.drop()  # Set to ACTIVE state
 	var drop_pos: Vector2 = player.get_drop_position()
 	turret.global_position = drop_pos
 
@@ -261,7 +261,7 @@ func test_can_drop_true_when_turret_far_from_drop_position():
 	player.facing_direction = Vector2.RIGHT
 	# Place a turret far away from drop position
 	var turret: Area2D = _make_item(Vector2.ZERO)
-	turret.drop()  # Set to TURRET state
+	turret.drop()  # Set to ACTIVE state
 	turret.global_position = Vector2(9999, 9999)
 
 	# Add a tower zone at the drop position so zone check passes
@@ -281,7 +281,7 @@ func test_can_drop_false_when_turret_overlaps_even_in_tower_zone():
 
 	# Place a turret at the same drop position
 	var turret: Area2D = _make_item(Vector2.ZERO)
-	turret.drop()
+	turret.drop()  # Set to ACTIVE state
 	turret.global_position = player.get_drop_position()
 
 	await get_tree().physics_frame
@@ -340,7 +340,7 @@ func test_auto_pickup_ignored_when_inventory_full():
 
 func test_auto_pickup_ignores_turret_state_items():
 	var item: Area2D = _make_item(Vector2(30, 0))
-	item.drop()  # Set to TURRET state
+	item.drop()  # Set to ACTIVE state
 	_simulate_item_enters_range(item)
 	assert_false(player.inventory.has(item))
 
