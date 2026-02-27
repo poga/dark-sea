@@ -16,6 +16,7 @@ var _tide: ColorRect
 var item_pool: Array[Dictionary] = [
 	{ "scene": preload("res://scenes/item/turret_item.tscn"), "weight": 3 },
 	{ "scene": preload("res://scenes/item/aoe_item.tscn"), "weight": 1 },
+	{ "scene": preload("res://scenes/item/hammer_item.tscn"), "weight": 2 },
 ]
 
 # --- Spawning rules: edit this to change how many spawn ---
