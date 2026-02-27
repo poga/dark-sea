@@ -43,7 +43,7 @@ func _on_inventory_changed(slot: int, item: Area2D) -> void:
 	else:
 		icon.texture = null
 
-func _on_active_slot_changed(slot: int) -> void:
+func _on_active_slot_changed(_slot: int) -> void:
 	_update_active_highlight()
 
 func _update_active_highlight() -> void:
