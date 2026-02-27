@@ -1,5 +1,7 @@
 extends "res://scenes/item/base_item.gd"
 
+const ZoneScript = preload("res://scenes/zones/zone.gd")
+
 @export var attack_range: float = 150.0
 @export var attack_rate: float = 1.0
 @export var projectile_speed: float = 300.0
@@ -7,9 +9,12 @@ extends "res://scenes/item/base_item.gd"
 
 var _monsters_in_range: Array[Area2D] = []
 var _projectile_scene: PackedScene = preload("res://scenes/projectile/projectile.tscn")
+var _drop_check_shape: CircleShape2D
 
 func _ready():
 	super._ready()
+	_drop_check_shape = CircleShape2D.new()
+	_drop_check_shape.radius = 20.0
 	$ActiveState/DetectionArea.area_entered.connect(_on_detection_area_entered)
 	$ActiveState/DetectionArea.area_exited.connect(_on_detection_area_exited)
 	$ActiveState/ShootTimer.timeout.connect(_on_shoot_timer_timeout)
@@ -17,6 +22,26 @@ func _ready():
 
 func has_preview() -> bool:
 	return true
+
+func can_use(context: Dictionary) -> bool:
+	var target_pos: Vector2 = context.target_position
+	if not is_inside_tree():
+		return false
+	var space_state: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
+	var query := PhysicsShapeQueryParameters2D.new()
+	query.shape = _drop_check_shape
+	query.transform = Transform2D(0, target_pos)
+	query.collide_with_areas = true
+	query.collide_with_bodies = false
+	var results: Array[Dictionary] = space_state.intersect_shape(query)
+	var in_tower_zone: bool = false
+	for result in results:
+		var collider = result["collider"]
+		if "zone_type" in collider and collider.zone_type == ZoneScript.ZoneType.TOWER:
+			in_tower_zone = true
+		if collider is Area2D and collider.has_method("pick_up") and collider.current_state == State.ACTIVE:
+			return false
+	return in_tower_zone
 
 func use(_context: Dictionary) -> int:
 	return UseResult.PLACE

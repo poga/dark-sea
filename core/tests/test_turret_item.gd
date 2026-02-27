@@ -76,3 +76,9 @@ func test_store_in_inventory_clears_monsters_and_stops_systems():
 	assert_eq(item._monsters_in_range.size(), 0)
 	var detection: Area2D = item.get_node("ActiveState/DetectionArea")
 	assert_false(detection.monitoring)
+
+func test_can_use_returns_bool():
+	# Full validation requires physics integration (real zones in scene).
+	# Unit test verifies the method exists and returns a bool without crashing.
+	var result: bool = item.can_use({"target_position": Vector2.ZERO, "player": null})
+	assert_typeof(result, TYPE_BOOL)
