@@ -14,7 +14,7 @@ var _tide: ColorRect
 # --- Item pool: edit this to change what spawns ---
 # Each entry has a scene and a weight (higher = more likely).
 var item_pool: Array[Dictionary] = [
-	{ "scene": preload("res://scenes/item/item.tscn"), "weight": 3 },
+	{ "scene": preload("res://scenes/item/turret_item.tscn"), "weight": 3 },
 	{ "scene": preload("res://scenes/item/aoe_item.tscn"), "weight": 1 },
 ]
 
