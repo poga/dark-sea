@@ -7,6 +7,7 @@ func before_each() -> void:
 	GameManager.resources = {}
 	GameManager.selected_character = ""
 	GameManager.characters = {}
+	GameManager._unlocked_overrides = []
 
 func test_add_gold_increases_gold():
 	GameManager.add_gold(5)
@@ -173,3 +174,30 @@ func test_get_character_returns_empty_when_none_selected():
 	GameManager.selected_character = ""
 	var data: Dictionary = GameManager.get_character()
 	assert_eq(data.size(), 0)
+
+# --- Character unlock persistence ---
+
+func test_default_character_is_unlocked():
+	GameManager.load_characters()
+	assert_true(GameManager.is_character_unlocked("default"))
+
+func test_locked_character_is_not_unlocked():
+	GameManager.characters["locked_test"] = {"name": "Test", "locked": true}
+	assert_false(GameManager.is_character_unlocked("locked_test"))
+
+func test_unlock_character_makes_it_unlocked():
+	GameManager.characters["locked_test"] = {"name": "Test", "locked": true}
+	GameManager.unlock_character("locked_test")
+	assert_true(GameManager.is_character_unlocked("locked_test"))
+
+func test_unlock_character_emits_signal():
+	GameManager.characters["locked_test"] = {"name": "Test", "locked": true}
+	watch_signals(GameManager)
+	GameManager.unlock_character("locked_test")
+	assert_signal_emitted_with_parameters(GameManager, "character_unlocked", ["locked_test"])
+
+func test_get_unlocked_characters_returns_unlocked_only():
+	GameManager.load_characters()
+	var unlocked: Array = GameManager.get_unlocked_characters()
+	for id: String in unlocked:
+		assert_true(GameManager.is_character_unlocked(id))
