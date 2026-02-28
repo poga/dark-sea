@@ -5,6 +5,8 @@ extends Node2D
 @export var spawn_y_min: float = -300.0
 @export var spawn_y_max: float = 300.0
 @export var gold_per_kill: int = 3
+@export var gold_burst_speed_min: float = 150.0
+@export var gold_burst_speed_max: float = 300.0
 
 var _monster_scene: PackedScene = preload("res://scenes/monster/monster.tscn")
 var _gold_scene: PackedScene = preload("res://scenes/gold/gold.tscn")
@@ -41,6 +43,9 @@ func _on_monster_died(monster: Area2D) -> void:
 	var death_pos: Vector2 = monster.global_position
 	for _i in gold_per_kill:
 		var gold: Area2D = _gold_scene.instantiate()
-		var offset: Vector2 = Vector2(randf_range(-30, 30), randf_range(-30, 30))
-		gold.global_position = death_pos + offset
+		gold.global_position = death_pos
+		var angle: float = randf() * TAU
+		var speed: float = randf_range(gold_burst_speed_min, gold_burst_speed_max)
+		var burst_vel: Vector2 = Vector2.from_angle(angle) * speed
 		get_parent().add_child(gold)
+		gold.start_spawning(burst_vel)
