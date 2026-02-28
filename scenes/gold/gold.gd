@@ -10,7 +10,6 @@ extends Area2D
 enum State { SPAWNING, IDLE, COLLECTING }
 
 var current_state: State = State.IDLE
-var spawn_velocity: Vector2 = Vector2.ZERO
 var _velocity: Vector2 = Vector2.ZERO
 var _target_body: Node2D = null
 var _pulse_tween: Tween = null
@@ -20,7 +19,6 @@ func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 
 func start_spawning(vel: Vector2) -> void:
-	spawn_velocity = vel
 	_velocity = vel
 	current_state = State.SPAWNING
 
@@ -56,7 +54,7 @@ func _on_body_entered(body: Node2D) -> void:
 	if current_state == State.IDLE and body is CharacterBody2D:
 		_start_collecting(body)
 
-func _start_collecting(body: Node2D) -> void:
+func _start_collecting(body: CharacterBody2D) -> void:
 	current_state = State.COLLECTING
 	_target_body = body
 	if _pulse_tween:
