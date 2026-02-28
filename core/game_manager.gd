@@ -10,6 +10,7 @@ signal active_slot_changed(slot: int)
 signal item_use_attempted(item: Area2D)
 signal item_used(item: Area2D, result: int)
 signal item_use_failed(item: Area2D)
+signal pickup_tween_requested(texture: Texture2D, screen_pos: Vector2, slot: int)
 
 enum Phase { DAY, NIGHT }
 
@@ -86,6 +87,8 @@ func try_pickup(item: Area2D) -> bool:
 	var slot: int = _find_empty_slot()
 	if slot == -1:
 		return false
+	var screen_pos: Vector2 = _world_to_screen(item.global_position)
+	var icon: Texture2D = item.inventory_icon if "inventory_icon" in item else null
 	item.get_parent().remove_child(item)
 	item.store_in_inventory()
 	inventory[slot] = item
@@ -93,6 +96,8 @@ func try_pickup(item: Area2D) -> bool:
 		_player.get_node("HoldPosition").add_child(item)
 		item.position = Vector2.ZERO
 	inventory_changed.emit(slot, item)
+	if icon:
+		pickup_tween_requested.emit(icon, screen_pos, slot)
 	return true
 
 func switch_slot(slot: int) -> void:
@@ -159,3 +164,10 @@ func _find_empty_slot() -> int:
 		if inventory[i] == null:
 			return i
 	return -1
+
+func _world_to_screen(world_pos: Vector2) -> Vector2:
+	var viewport := get_viewport()
+	if viewport == null:
+		return world_pos
+	var canvas_transform: Transform2D = viewport.get_canvas_transform()
+	return canvas_transform * world_pos

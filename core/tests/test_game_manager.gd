@@ -78,3 +78,28 @@ func test_skip_to_next_phase_transitions_from_night_to_day():
 	GameManager.skip_to_next_phase()
 	assert_eq(GameManager.current_phase, GameManager.Phase.DAY)
 	assert_signal_emitted(GameManager, "day_started")
+
+func test_try_pickup_emits_pickup_tween_requested():
+	# Create a parent to hold the item (try_pickup calls item.get_parent().remove_child)
+	var parent := Node2D.new()
+	add_child(parent)
+	var item := Area2D.new()
+	# Add child nodes required by base_item._ready() and _update_state_visuals()
+	for state_name in ["PickupState", "ActiveState", "InventoryState"]:
+		var state_node := Node2D.new()
+		state_node.name = state_name
+		var label := Label.new()
+		label.name = "Label"
+		state_node.add_child(label)
+		item.add_child(state_node)
+	item.set_script(load("res://scenes/item/base_item.gd"))
+	item.inventory_icon = load("res://icon.svg")
+	parent.add_child(item)
+	item.global_position = Vector2(100, 200)
+
+	GameManager.reset_inventory()
+	watch_signals(GameManager)
+	GameManager.try_pickup(item)
+
+	assert_signal_emitted(GameManager, "pickup_tween_requested")
+	parent.queue_free()
