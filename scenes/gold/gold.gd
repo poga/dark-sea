@@ -6,13 +6,17 @@ extends Area2D
 @export var magnet_acceleration: float = 3000.0
 @export var magnet_max_speed: float = 1200.0
 @export var pulse_min_alpha: float = 0.7
+@export var rise_height: float = 20.0
+@export var rise_duration: float = 0.2
+@export var rise_pause: float = 0.15
 
-enum State { SPAWNING, IDLE, COLLECTING }
+enum State { SPAWNING, IDLE, RISING, COLLECTING }
 
 var current_state: State = State.IDLE
 var _velocity: Vector2 = Vector2.ZERO
 var _target_body: Node2D = null
 var _pulse_tween: Tween = null
+var _rise_tween: Tween = null
 
 func _ready() -> void:
 	add_to_group("gold")

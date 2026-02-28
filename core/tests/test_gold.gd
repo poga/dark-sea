@@ -39,14 +39,14 @@ func test_idle_gold_ignores_body_during_spawning():
 	gold._on_body_entered(dummy)
 	assert_eq(gold.current_state, gold.State.SPAWNING, "Should stay in SPAWNING")
 
-func test_body_entered_during_idle_starts_collecting():
+func test_body_entered_during_idle_starts_rising():
 	var gold: Area2D = _gold_scene.instantiate()
 	add_child_autofree(gold)
 	assert_eq(gold.current_state, gold.State.IDLE)
 	var dummy: CharacterBody2D = CharacterBody2D.new()
 	add_child_autofree(dummy)
 	gold._on_body_entered(dummy)
-	assert_eq(gold.current_state, gold.State.COLLECTING)
+	assert_eq(gold.current_state, gold.State.RISING)
 
 func test_collecting_moves_toward_target():
 	var gold: Area2D = _gold_scene.instantiate()
