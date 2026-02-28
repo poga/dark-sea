@@ -89,6 +89,11 @@ func add_resource(type: String, amount: int) -> void:
 func get_resource(type: String) -> int:
 	return resources.get(type, 0)
 
+func reset_for_new_game() -> void:
+	gold = 0
+	resources = {}
+	reset_inventory()
+
 # --- Character management ---
 
 func load_characters() -> void:
