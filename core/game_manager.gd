@@ -136,6 +136,24 @@ func get_unlocked_characters() -> Array:
 			result.append(id)
 	return result
 
+func apply_character_loadout() -> void:
+	var data: Dictionary = get_character()
+	if data.is_empty():
+		return
+	# Apply starting resources
+	var starting_resources: Dictionary = data.get("starting_resources", {})
+	for type: String in starting_resources:
+		add_resource(type, int(starting_resources[type]))
+	# Apply starting items
+	var starting_items: Array = data.get("starting_items", [])
+	for item_path: String in starting_items:
+		var scene: PackedScene = load(item_path)
+		if scene == null:
+			push_error("GameManager: Could not load item scene '%s'" % item_path)
+			continue
+		var item: Area2D = scene.instantiate()
+		try_pickup(item)
+
 func _save_unlocks() -> void:
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file == null:

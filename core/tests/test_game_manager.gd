@@ -201,3 +201,23 @@ func test_get_unlocked_characters_returns_unlocked_only():
 	var unlocked: Array = GameManager.get_unlocked_characters()
 	for id: String in unlocked:
 		assert_true(GameManager.is_character_unlocked(id))
+
+# --- Character loadout ---
+
+func test_apply_character_loadout_sets_resources():
+	GameManager.load_characters()
+	GameManager.characters["test_char"] = {
+		"name": "Test",
+		"starting_items": [],
+		"starting_resources": {"gold": 10, "bones": 5},
+		"locked": false,
+	}
+	GameManager.set_character("test_char")
+	GameManager.apply_character_loadout()
+	assert_eq(GameManager.get_resource("gold"), 10)
+	assert_eq(GameManager.get_resource("bones"), 5)
+
+func test_apply_character_loadout_does_nothing_when_no_character():
+	GameManager.selected_character = ""
+	GameManager.apply_character_loadout()
+	assert_eq(GameManager.get_resource("gold"), 0)
