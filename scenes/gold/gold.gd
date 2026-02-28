@@ -31,9 +31,9 @@ func _physics_process(delta: float) -> void:
 		State.COLLECTING:
 			_process_collecting(delta)
 
-func _process_spawning(_delta: float) -> void:
-	_velocity *= friction
-	global_position += _velocity
+func _process_spawning(delta: float) -> void:
+	_velocity *= pow(friction, delta * 60.0)
+	global_position += _velocity * delta
 	if _velocity.length() < stop_threshold:
 		_enter_idle()
 
@@ -53,7 +53,7 @@ func _start_pulse() -> void:
 	_pulse_tween.tween_property(self, "modulate:a", 1.0, 0.6)
 
 func _on_body_entered(body: Node2D) -> void:
-	if current_state == State.IDLE:
+	if current_state == State.IDLE and body is CharacterBody2D:
 		_start_collecting(body)
 
 func _start_collecting(body: Node2D) -> void:
