@@ -21,32 +21,27 @@ func _simulate_item_enters_range(item: Area2D) -> void:
 func test_default_facing_direction():
 	assert_eq(player.facing_direction, Vector2.RIGHT)
 
-func test_snap_to_cardinal_right():
-	assert_eq(player.snap_to_cardinal(Vector2(1, 0.3)), Vector2.RIGHT)
+func test_update_facing_normalizes_input():
+	player.update_facing(Vector2(3, 4))
+	assert_almost_eq(player.facing_direction, Vector2(0.6, 0.8), Vector2(0.001, 0.001))
 
-func test_snap_to_cardinal_left():
-	assert_eq(player.snap_to_cardinal(Vector2(-1, 0.3)), Vector2.LEFT)
-
-func test_snap_to_cardinal_down():
-	assert_eq(player.snap_to_cardinal(Vector2(0.3, 1)), Vector2.DOWN)
-
-func test_snap_to_cardinal_up():
-	assert_eq(player.snap_to_cardinal(Vector2(0.3, -1)), Vector2.UP)
-
-func test_snap_diagonal_prefers_horizontal():
-	assert_eq(player.snap_to_cardinal(Vector2(1, 1)), Vector2.RIGHT)
+func test_update_facing_preserves_direction_on_zero_input():
+	player.update_facing(Vector2(1, 0))
+	player.update_facing(Vector2.ZERO)
+	assert_eq(player.facing_direction, Vector2.RIGHT)
 
 # --- Drop position ---
 
-func test_get_drop_position_right():
+func test_get_drop_position_uses_facing_direction():
 	player.facing_direction = Vector2.RIGHT
 	var expected: Vector2 = player.global_position + Vector2.RIGHT * player.drop_distance
 	assert_eq(player.get_drop_position(), expected)
 
-func test_get_drop_position_left():
-	player.facing_direction = Vector2.LEFT
-	var expected: Vector2 = player.global_position + Vector2.LEFT * player.drop_distance
-	assert_eq(player.get_drop_position(), expected)
+func test_get_drop_position_diagonal():
+	var dir: Vector2 = Vector2(1, 1).normalized()
+	player.facing_direction = dir
+	var expected: Vector2 = player.global_position + dir * player.drop_distance
+	assert_almost_eq(player.get_drop_position(), expected, Vector2(0.001, 0.001))
 
 # --- Auto-pickup delegation ---
 
