@@ -4,12 +4,8 @@ extends Node2D
 @export var spawn_x: float = 400.0
 @export var spawn_y_min: float = -300.0
 @export var spawn_y_max: float = 300.0
-@export var gold_per_kill: int = 3
-@export var gold_burst_speed_min: float = 150.0
-@export var gold_burst_speed_max: float = 300.0
 
 var _monster_scene: PackedScene = preload("res://scenes/monster/monster.tscn")
-var _gold_scene: PackedScene = preload("res://scenes/gold/gold.tscn")
 
 @onready var _damage_numbers: Node2D = get_parent().get_node("DamageNumbers")
 
@@ -39,12 +35,5 @@ func _on_spawn_timer_timeout() -> void:
 	monster.damage_taken.connect(_damage_numbers.show_damage)
 	get_parent().get_node("Monsters").add_child(monster)
 
-func _on_monster_died(monster_type: String, death_pos: Vector2, monster: Area2D) -> void:
-	for _i in gold_per_kill:
-		var gold: Area2D = _gold_scene.instantiate()
-		gold.global_position = death_pos
-		var angle: float = randf() * TAU
-		var speed: float = randf_range(gold_burst_speed_min, gold_burst_speed_max)
-		var burst_vel: Vector2 = Vector2.from_angle(angle) * speed
-		get_parent().add_child(gold)
-		gold.start_spawning(burst_vel)
+func _on_monster_died(monster_type: String, death_pos: Vector2, _monster: Area2D) -> void:
+	DropManager.spawn_drops(monster_type, death_pos, get_parent())
