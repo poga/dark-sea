@@ -217,7 +217,21 @@ func test_apply_character_loadout_sets_resources():
 	assert_eq(GameManager.get_resource("gold"), 10)
 	assert_eq(GameManager.get_resource("bones"), 5)
 
+func test_apply_character_loadout_adds_starting_items_to_inventory():
+	GameManager.load_characters()
+	GameManager.set_character("default")
+	GameManager.apply_character_loadout()
+	assert_ne(GameManager.inventory[0], null, "Starting item should be in slot 0")
+
 func test_apply_character_loadout_does_nothing_when_no_character():
 	GameManager.selected_character = ""
 	GameManager.apply_character_loadout()
 	assert_eq(GameManager.get_resource("gold"), 0)
+
+func test_reset_for_new_game_preserves_player_reference():
+	var player := CharacterBody2D.new()
+	add_child(player)
+	GameManager.register_player(player)
+	GameManager.reset_for_new_game()
+	assert_eq(GameManager._player, player, "Player reference should survive reset")
+	player.queue_free()
