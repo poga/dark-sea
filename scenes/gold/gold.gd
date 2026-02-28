@@ -46,7 +46,7 @@ func _enter_idle() -> void:
 	# Check if player is already overlapping
 	for body in get_overlapping_bodies():
 		if body is CharacterBody2D:
-			_start_collecting(body)
+			_enter_rising(body)
 			return
 
 func _start_pulse() -> void:
@@ -56,7 +56,26 @@ func _start_pulse() -> void:
 
 func _on_body_entered(body: Node2D) -> void:
 	if current_state == State.IDLE and body is CharacterBody2D:
-		_start_collecting(body)
+		_enter_rising(body)
+
+func _enter_rising(body: CharacterBody2D) -> void:
+	current_state = State.RISING
+	_target_body = body
+	if _pulse_tween:
+		_pulse_tween.kill()
+		_pulse_tween = null
+	modulate.a = 1.0
+	_rise_tween = create_tween()
+	_rise_tween.tween_property(self, "global_position:y", global_position.y - rise_height, rise_duration) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	_rise_tween.tween_interval(rise_pause)
+	_rise_tween.tween_callback(_on_rise_complete)
+
+func _on_rise_complete() -> void:
+	if not is_instance_valid(_target_body):
+		queue_free()
+		return
+	_start_collecting(_target_body)
 
 func _start_collecting(body: CharacterBody2D) -> void:
 	current_state = State.COLLECTING
