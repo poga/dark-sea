@@ -4,6 +4,7 @@ extends GutTest
 
 func before_each() -> void:
 	GameManager.gold = 0
+	GameManager.resources = {}
 
 func test_add_gold_increases_gold():
 	GameManager.add_gold(5)
@@ -107,3 +108,29 @@ func test_try_pickup_emits_pickup_tween_requested():
 	)
 	GameManager.reset_inventory()
 	parent.queue_free()
+
+func test_add_resource_stores_value():
+	GameManager.add_resource("bones", 5)
+	assert_eq(GameManager.get_resource("bones"), 5)
+
+func test_add_resource_accumulates():
+	GameManager.add_resource("bones", 2)
+	GameManager.add_resource("bones", 3)
+	assert_eq(GameManager.get_resource("bones"), 5)
+
+func test_add_resource_emits_resource_changed():
+	watch_signals(GameManager)
+	GameManager.add_resource("bones", 3)
+	assert_signal_emitted_with_parameters(GameManager, "resource_changed", ["bones", 3])
+
+func test_get_resource_returns_zero_for_unknown():
+	assert_eq(GameManager.get_resource("unknown_type"), 0)
+
+func test_add_gold_uses_resource_system():
+	GameManager.add_gold(5)
+	assert_eq(GameManager.get_resource("gold"), 5)
+
+func test_add_gold_still_emits_gold_changed():
+	watch_signals(GameManager)
+	GameManager.add_gold(3)
+	assert_signal_emitted_with_parameters(GameManager, "gold_changed", [3])

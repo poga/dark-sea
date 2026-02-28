@@ -11,6 +11,7 @@ signal item_use_attempted(item: Area2D)
 signal item_used(item: Area2D, result: int)
 signal item_use_failed(item: Area2D)
 signal pickup_tween_requested(texture: Texture2D, screen_pos: Vector2, slot: int)
+signal resource_changed(type: String, new_amount: int)
 
 enum Phase { DAY, NIGHT }
 
@@ -19,6 +20,7 @@ const INVENTORY_SIZE: int = 8
 var state: int = 0
 var current_phase: Phase = Phase.DAY
 var gold: int = 0
+var resources: Dictionary = {}
 var inventory: Array[Area2D] = []
 var active_slot: int = 0
 var _player: CharacterBody2D
@@ -68,6 +70,16 @@ func skip_to_next_phase() -> void:
 func add_gold(amount: int) -> void:
 	gold += amount
 	gold_changed.emit(gold)
+	add_resource("gold", amount)
+
+func add_resource(type: String, amount: int) -> void:
+	if not resources.has(type):
+		resources[type] = 0
+	resources[type] += amount
+	resource_changed.emit(type, resources[type])
+
+func get_resource(type: String) -> int:
+	return resources.get(type, 0)
 
 # --- Inventory management ---
 
