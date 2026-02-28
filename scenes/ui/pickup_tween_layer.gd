@@ -25,7 +25,7 @@ func _on_pickup_tween_requested(texture: Texture2D, screen_pos: Vector2, slot: i
 
 	var tween: Tween = create_tween()
 	tween.tween_property(icon, "position", target_pos - icon_size / 2.0, duration) \
-		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 	tween.tween_callback(icon.queue_free)
 
 func _find_toolbar() -> HBoxContainer:
