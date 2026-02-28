@@ -1,0 +1,12 @@
+{
+  "default": {
+    "name": "Castaway",
+    "sprite": "res://icon.svg",
+    "stats": {
+      "speed": 200.0
+    },
+    "starting_items": [],
+    "starting_resources": {},
+    "locked": false
+  }
+}
