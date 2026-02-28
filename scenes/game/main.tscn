@@ -29,11 +29,23 @@ position = Vector2(-400, 0)
 [node name="SeaZone" parent="Zones" unique_id=1012481081 instance=ExtResource("5")]
 position = Vector2(300, 0)
 
+[node name="Tide" type="ColorRect" parent="." unique_id=1481333432]
+z_index = 1
+offset_left = 100.0
+offset_top = -400.0
+offset_right = 504.0
+offset_bottom = 393.0
+color = Color(0, 0.5921569, 0.7764706, 0.5803922)
+script = ExtResource("15")
+
 [node name="Player" parent="." unique_id=1427541742 instance=ExtResource("1")]
+z_index = 2
 
 [node name="Monsters" type="Node2D" parent="." unique_id=1315256508]
+z_index = 2
 
 [node name="DamageNumbers" type="Node2D" parent="."]
+z_index = 2
 script = ExtResource("16")
 
 [node name="ItemSpawnArea" type="Area2D" parent="." unique_id=244974336]
@@ -77,14 +89,6 @@ script = ExtResource("12")
 [node name="Toolbar" parent="UI" unique_id=1711227204 instance=ExtResource("14")]
 
 [node name="PickupTweenLayer" parent="UI" instance=ExtResource("17")]
-
-[node name="Tide" type="ColorRect" parent="." unique_id=1481333432]
-offset_left = 100.0
-offset_top = -400.0
-offset_right = 504.0
-offset_bottom = 393.0
-color = Color(0, 0.5921569, 0.7764706, 0.5803922)
-script = ExtResource("15")
 
 [node name="DebugSkipPhase" type="Button" parent="UI"]
 unique_name_in_owner = true
