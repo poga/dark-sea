@@ -8,7 +8,7 @@ extends Node2D
 @export var gold_per_day: int = 5
 @export var tide_path: NodePath
 
-var _gold_scene: PackedScene = preload("res://scenes/gold/gold.tscn")
+var _gold_scene: PackedScene = preload("res://scenes/pickup/resource_pickup.tscn")
 var _spawn_area: Area2D
 var _sea_zone: Area2D
 var _tide: ColorRect
@@ -63,7 +63,7 @@ func _cleanup_sea_gold() -> void:
 	var zone_half_width: float = _sea_zone.zone_width / 2.0
 	var zone_left: float = zone_pos.x - zone_half_width
 	var zone_right: float = zone_pos.x + zone_half_width
-	for gold in get_tree().get_nodes_in_group("gold"):
+	for gold in get_tree().get_nodes_in_group("pickup"):
 		if is_instance_valid(gold) and gold.global_position.x >= zone_left and gold.global_position.x <= zone_right:
 			gold.queue_free()
 
