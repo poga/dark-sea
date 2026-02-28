@@ -9,6 +9,8 @@ extends Node2D
 var _monster_scene: PackedScene = preload("res://scenes/monster/monster.tscn")
 var _gold_scene: PackedScene = preload("res://scenes/gold/gold.tscn")
 
+@onready var _damage_numbers: Node2D = get_parent().get_node("DamageNumbers")
+
 func _ready() -> void:
 	$SpawnTimer.wait_time = spawn_interval
 	$SpawnTimer.timeout.connect(_on_spawn_timer_timeout)
@@ -32,6 +34,7 @@ func _on_spawn_timer_timeout() -> void:
 	var spawn_y: float = randf_range(spawn_y_min, spawn_y_max)
 	monster.global_position = Vector2(spawn_x, spawn_y)
 	monster.died.connect(_on_monster_died.bind(monster))
+	monster.damage_taken.connect(_damage_numbers.show_damage)
 	get_parent().get_node("Monsters").add_child(monster)
 
 func _on_monster_died(monster: Area2D) -> void:
