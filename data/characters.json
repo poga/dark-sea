@@ -5,7 +5,7 @@
     "stats": {
       "speed": 200.0
     },
-    "starting_items": [],
+    "starting_items": ["res://scenes/item/hammer_item.tscn"],
     "starting_resources": {},
     "locked": false
   }

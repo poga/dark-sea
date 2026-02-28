@@ -92,7 +92,9 @@ func get_resource(type: String) -> int:
 func reset_for_new_game() -> void:
 	gold = 0
 	resources = {}
-	reset_inventory()
+	inventory.resize(INVENTORY_SIZE)
+	inventory.fill(null)
+	active_slot = 0
 
 # --- Character management ---
 
@@ -201,7 +203,8 @@ func try_pickup(item: Area2D) -> bool:
 		return false
 	var screen_pos: Vector2 = _world_to_screen(item.global_position)
 	var icon: Texture2D = item.inventory_icon if "inventory_icon" in item else null
-	item.get_parent().remove_child(item)
+	if item.get_parent():
+		item.get_parent().remove_child(item)
 	item.store_in_inventory()
 	inventory[slot] = item
 	if slot == active_slot and _player:
