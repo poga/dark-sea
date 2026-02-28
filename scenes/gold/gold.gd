@@ -3,7 +3,7 @@ extends Area2D
 @export var value: int = 1
 @export var friction: float = 0.85
 @export var stop_threshold: float = 5.0
-@export var magnet_acceleration: float = 1500.0
+@export var magnet_acceleration: float = 3000.0
 @export var magnet_max_speed: float = 600.0
 @export var pulse_min_alpha: float = 0.7
 
@@ -71,9 +71,7 @@ func _process_collecting(delta: float) -> void:
 	if _velocity.length() > magnet_max_speed:
 		_velocity = _velocity.normalized() * magnet_max_speed
 	global_position += _velocity * delta
-	# Scale down as we approach
 	var dist: float = global_position.distance_to(_target_body.global_position)
-	scale = Vector2.ONE * clampf(dist / 50.0, 0.3, 1.0)
 	if dist < 10.0:
 		GameManager.add_gold(value)
 		queue_free()
