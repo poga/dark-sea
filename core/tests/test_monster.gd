@@ -35,3 +35,9 @@ func test_despawns_when_past_left_edge():
 	monster.global_position.x = monster.despawn_x - 1.0
 	monster._physics_process(0.01)
 	assert_true(monster.is_queued_for_deletion())
+
+func test_take_damage_emits_damage_taken():
+	watch_signals(monster)
+	monster.global_position = Vector2(100, 200)
+	monster.take_damage(10.0)
+	assert_signal_emitted(monster, "damage_taken")
