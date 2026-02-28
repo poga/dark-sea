@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/toolbar.tscn" id="14"]
 [ext_resource type="Script" path="res://scenes/game/tide.gd" id="15"]
 [ext_resource type="Script" path="res://scenes/game/damage_numbers.gd" id="16"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pickup_tween_layer.tscn" id="17"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(400, 600)
@@ -75,6 +76,7 @@ script = ExtResource("12")
 
 [node name="Toolbar" parent="UI" unique_id=1711227204 instance=ExtResource("14")]
 
+[node name="PickupTweenLayer" parent="UI" instance=ExtResource("17")]
 
 [node name="Tide" type="ColorRect" parent="." unique_id=1481333432]
 offset_left = 100.0
