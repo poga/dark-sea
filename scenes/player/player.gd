@@ -22,7 +22,7 @@ func _physics_process(_delta):
 	var look: Vector2 = Input.get_vector("look_left", "look_right", "look_up", "look_down")
 	if look.is_zero_approx():
 		look = get_global_mouse_position() - global_position
-	facing_direction = snap_to_cardinal(look)
+	update_facing(look)
 
 	# Update drop preview
 	var preview: Node2D = $DropPreview
@@ -35,13 +35,9 @@ func _physics_process(_delta):
 	else:
 		preview.visible = false
 
-func snap_to_cardinal(raw: Vector2) -> Vector2:
-	if raw.is_zero_approx():
-		return facing_direction
-	if absf(raw.x) >= absf(raw.y):
-		return Vector2.RIGHT if raw.x >= 0 else Vector2.LEFT
-	else:
-		return Vector2.DOWN if raw.y >= 0 else Vector2.UP
+func update_facing(raw: Vector2) -> void:
+	if not raw.is_zero_approx():
+		facing_direction = raw.normalized()
 
 func _unhandled_input(event: InputEvent):
 	if event.is_action_pressed("use"):
