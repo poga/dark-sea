@@ -4,7 +4,7 @@ extends Area2D
 @export var friction: float = 0.85
 @export var stop_threshold: float = 5.0
 @export var magnet_acceleration: float = 3000.0
-@export var magnet_max_speed: float = 600.0
+@export var magnet_max_speed: float = 1200.0
 @export var pulse_min_alpha: float = 0.7
 
 enum State { SPAWNING, IDLE, COLLECTING }
@@ -66,10 +66,8 @@ func _process_collecting(delta: float) -> void:
 	if not is_instance_valid(_target_body):
 		queue_free()
 		return
-	var dir: Vector2 = (_target_body.global_position - global_position).normalized()
-	_velocity += dir * magnet_acceleration * delta
-	if _velocity.length() > magnet_max_speed:
-		_velocity = _velocity.normalized() * magnet_max_speed
+	var desired: Vector2 = (_target_body.global_position - global_position).normalized() * magnet_max_speed
+	_velocity = _velocity.move_toward(desired, magnet_acceleration * delta)
 	global_position += _velocity * delta
 	var dist: float = global_position.distance_to(_target_body.global_position)
 	if dist < 10.0:
