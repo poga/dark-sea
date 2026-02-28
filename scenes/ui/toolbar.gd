@@ -46,6 +46,12 @@ func _on_inventory_changed(slot: int, item: Area2D) -> void:
 func _on_active_slot_changed(_slot: int) -> void:
 	_update_active_highlight()
 
+func get_slot_center(slot: int) -> Vector2:
+	if slot < 0 or slot >= _icons.size():
+		return Vector2.ZERO
+	var icon: TextureRect = _icons[slot]
+	return icon.global_position + icon.size / 2.0
+
 func _update_active_highlight() -> void:
 	for i in range(_slots.size()):
 		var panel: PanelContainer = _slots[i]
