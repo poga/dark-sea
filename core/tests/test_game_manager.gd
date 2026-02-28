@@ -101,5 +101,9 @@ func test_try_pickup_emits_pickup_tween_requested():
 	watch_signals(GameManager)
 	GameManager.try_pickup(item)
 
-	assert_signal_emitted(GameManager, "pickup_tween_requested")
+	assert_signal_emitted_with_parameters(
+		GameManager, "pickup_tween_requested",
+		[load("res://icon.svg"), Vector2(100, 200), 0]
+	)
+	GameManager.reset_inventory()
 	parent.queue_free()
