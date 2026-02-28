@@ -17,6 +17,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 GameManager="*res://core/game_manager.gd"
+DropManager="*res://core/drop_manager.gd"
 
 [editor_plugins]
 
