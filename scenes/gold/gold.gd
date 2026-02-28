@@ -30,6 +30,8 @@ func _physics_process(delta: float) -> void:
 	match current_state:
 		State.SPAWNING:
 			_process_spawning(delta)
+		State.RISING:
+			pass  # Tween drives motion
 		State.COLLECTING:
 			_process_collecting(delta)
 
