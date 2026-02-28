@@ -41,3 +41,12 @@ func test_take_damage_emits_damage_taken():
 	monster.global_position = Vector2(100, 200)
 	monster.take_damage(10.0)
 	assert_signal_emitted(monster, "damage_taken")
+
+func test_monster_type_defaults_to_default():
+	assert_eq(monster.monster_type, "default")
+
+func test_died_signal_includes_type_and_position():
+	watch_signals(monster)
+	monster.global_position = Vector2(100, 200)
+	monster.take_damage(30.0)
+	assert_signal_emitted_with_parameters(monster, "died", ["default", Vector2(100, 200)])

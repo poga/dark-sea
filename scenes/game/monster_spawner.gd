@@ -39,8 +39,7 @@ func _on_spawn_timer_timeout() -> void:
 	monster.damage_taken.connect(_damage_numbers.show_damage)
 	get_parent().get_node("Monsters").add_child(monster)
 
-func _on_monster_died(monster: Area2D) -> void:
-	var death_pos: Vector2 = monster.global_position
+func _on_monster_died(monster_type: String, death_pos: Vector2, monster: Area2D) -> void:
 	for _i in gold_per_kill:
 		var gold: Area2D = _gold_scene.instantiate()
 		gold.global_position = death_pos

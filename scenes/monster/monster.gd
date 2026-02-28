@@ -1,8 +1,9 @@
 extends Area2D
 
-signal died
+signal died(monster_type: String, position: Vector2)
 signal damage_taken(amount: float, pos: Vector2)
 
+@export var monster_type: String = "default"
 @export var hp: float = 30.0
 @export var speed: float = 50.0
 @export var despawn_x: float = -500.0
@@ -16,5 +17,5 @@ func take_damage(amount: float) -> void:
 	hp -= amount
 	damage_taken.emit(amount, global_position)
 	if hp <= 0:
-		died.emit()
+		died.emit(monster_type, global_position)
 		queue_free()
