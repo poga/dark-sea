@@ -9,9 +9,24 @@ var _items_in_range: Array[Area2D] = []
 
 func _ready():
 	GameManager.register_player(self)
+	_apply_character_data()
 	$Camera2D.position_smoothing_speed = camera_smoothing_speed
 	$PickupZone.area_entered.connect(_on_pickup_zone_area_entered)
 	$PickupZone.area_exited.connect(_on_pickup_zone_area_exited)
+
+func _apply_character_data() -> void:
+	var data: Dictionary = GameManager.get_character()
+	if data.is_empty():
+		return
+	# Apply stats
+	var stats: Dictionary = data.get("stats", {})
+	if stats.has("speed"):
+		speed = stats["speed"]
+	# Apply sprite
+	if data.has("sprite") and data["sprite"] != "":
+		var texture: Texture2D = load(data["sprite"])
+		if texture:
+			$Sprite2D.texture = texture
 
 func _physics_process(_delta):
 	var direction: Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down")
