@@ -12,15 +12,19 @@ signal item_used(item: Area2D, result: int)
 signal item_use_failed(item: Area2D)
 signal pickup_tween_requested(texture: Texture2D, screen_pos: Vector2, slot: int)
 signal resource_changed(type: String, new_amount: int)
+signal character_selected(id: String)
 
 enum Phase { DAY, NIGHT }
 
 const INVENTORY_SIZE: int = 8
+const CHARACTERS_PATH: String = "res://data/characters.json"
 
 var state: int = 0
 var current_phase: Phase = Phase.DAY
 var gold: int = 0
 var resources: Dictionary = {}
+var characters: Dictionary = {}
+var selected_character: String = ""
 var inventory: Array[Area2D] = []
 var active_slot: int = 0
 var _player: CharacterBody2D
@@ -37,6 +41,7 @@ func _ready() -> void:
 	add_child(_phase_timer)
 	inventory.resize(INVENTORY_SIZE)
 	inventory.fill(null)
+	load_characters()
 
 func increment_state():
 	state += 1
@@ -80,6 +85,32 @@ func add_resource(type: String, amount: int) -> void:
 
 func get_resource(type: String) -> int:
 	return resources.get(type, 0)
+
+# --- Character management ---
+
+func load_characters() -> void:
+	var file := FileAccess.open(CHARACTERS_PATH, FileAccess.READ)
+	if file == null:
+		push_error("GameManager: Could not open %s" % CHARACTERS_PATH)
+		return
+	var json := JSON.new()
+	var err: int = json.parse(file.get_as_text())
+	if err != OK:
+		push_error("GameManager: JSON parse error in %s: %s" % [CHARACTERS_PATH, json.get_error_message()])
+		return
+	characters = json.data
+
+func set_character(id: String) -> void:
+	if not characters.has(id):
+		push_error("GameManager: Unknown character '%s'" % id)
+		return
+	selected_character = id
+	character_selected.emit(id)
+
+func get_character() -> Dictionary:
+	if selected_character == "" or not characters.has(selected_character):
+		return {}
+	return characters[selected_character]
 
 # --- Inventory management ---
 

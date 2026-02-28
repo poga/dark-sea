@@ -5,6 +5,7 @@ extends GutTest
 func before_each() -> void:
 	GameManager.gold = 0
 	GameManager.resources = {}
+	GameManager.selected_character = ""
 
 func test_add_gold_increases_gold():
 	GameManager.add_gold(5)
@@ -134,3 +135,40 @@ func test_add_gold_still_emits_gold_changed():
 	watch_signals(GameManager)
 	GameManager.add_gold(3)
 	assert_signal_emitted_with_parameters(GameManager, "gold_changed", [3])
+
+# --- Character loading and selection ---
+
+func test_load_characters_populates_characters_dict():
+	GameManager.load_characters()
+	assert_gt(GameManager.characters.size(), 0, "Should load at least one character")
+
+func test_load_characters_has_default():
+	GameManager.load_characters()
+	assert_true(GameManager.characters.has("default"), "Should have default character")
+
+func test_load_characters_default_has_name():
+	GameManager.load_characters()
+	var char_data: Dictionary = GameManager.characters["default"]
+	assert_eq(char_data["name"], "Castaway")
+
+func test_set_character_stores_selection():
+	GameManager.load_characters()
+	GameManager.set_character("default")
+	assert_eq(GameManager.selected_character, "default")
+
+func test_get_character_returns_data():
+	GameManager.load_characters()
+	GameManager.set_character("default")
+	var data: Dictionary = GameManager.get_character()
+	assert_eq(data["name"], "Castaway")
+
+func test_set_character_emits_signal():
+	GameManager.load_characters()
+	watch_signals(GameManager)
+	GameManager.set_character("default")
+	assert_signal_emitted_with_parameters(GameManager, "character_selected", ["default"])
+
+func test_get_character_returns_empty_when_none_selected():
+	GameManager.selected_character = ""
+	var data: Dictionary = GameManager.get_character()
+	assert_eq(data.size(), 0)
