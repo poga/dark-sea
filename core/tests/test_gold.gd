@@ -60,3 +60,27 @@ func test_collecting_moves_toward_target():
 	gold._process_collecting(0.1)
 	var end_dist: float = gold.global_position.distance_to(target.global_position)
 	assert_lt(end_dist, start_dist, "Gold should move closer to target")
+
+func test_rising_ignores_additional_body_entered():
+	var gold: Area2D = _gold_scene.instantiate()
+	add_child_autofree(gold)
+	var dummy1: CharacterBody2D = CharacterBody2D.new()
+	add_child_autofree(dummy1)
+	gold._on_body_entered(dummy1)
+	assert_eq(gold.current_state, gold.State.RISING)
+	# Second body should be ignored
+	var dummy2: CharacterBody2D = CharacterBody2D.new()
+	add_child_autofree(dummy2)
+	gold._on_body_entered(dummy2)
+	assert_eq(gold.current_state, gold.State.RISING, "Should stay in RISING")
+
+func test_rise_complete_transitions_to_collecting():
+	var gold: Area2D = _gold_scene.instantiate()
+	add_child_autofree(gold)
+	var dummy: CharacterBody2D = CharacterBody2D.new()
+	add_child_autofree(dummy)
+	gold._on_body_entered(dummy)
+	assert_eq(gold.current_state, gold.State.RISING)
+	# Simulate tween completion
+	gold._on_rise_complete()
+	assert_eq(gold.current_state, gold.State.COLLECTING)
