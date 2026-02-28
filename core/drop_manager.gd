@@ -6,6 +6,11 @@ var drop_tables: Dictionary = {}
 var _preloaded_item_scenes: Dictionary = {}
 var _pickup_scene: PackedScene = preload("res://scenes/pickup/resource_pickup.tscn")
 
+var resource_colors: Dictionary = {
+	"gold": Color(1, 0.84, 0, 1),
+	"bones": Color(0.9, 0.9, 0.9, 1),
+}
+
 func _ready() -> void:
 	load_drop_tables()
 
@@ -62,15 +67,18 @@ func spawn_drops(monster_type: String, position: Vector2, parent: Node) -> void:
 			_spawn_resource_drop(result, position, parent)
 
 func _spawn_resource_drop(result: Dictionary, position: Vector2, parent: Node) -> void:
-	var pickup: Area2D = _pickup_scene.instantiate()
-	pickup.resource_type = result["type"]
-	pickup.value = result["amount"]
-	pickup.global_position = position
-	var angle: float = randf() * TAU
-	var speed: float = randf_range(150.0, 300.0)
-	var burst_vel: Vector2 = Vector2.from_angle(angle) * speed
-	parent.add_child(pickup)
-	pickup.start_spawning(burst_vel)
+	for _i in result["amount"]:
+		var pickup: Area2D = _pickup_scene.instantiate()
+		pickup.resource_type = result["type"]
+		pickup.value = 1
+		pickup.global_position = position
+		var angle: float = randf() * TAU
+		var speed: float = randf_range(150.0, 300.0)
+		var burst_vel: Vector2 = Vector2.from_angle(angle) * speed
+		if resource_colors.has(result["type"]):
+			pickup.get_node("ColorRect").color = resource_colors[result["type"]]
+		parent.add_child(pickup)
+		pickup.start_spawning(burst_vel)
 
 func _spawn_item_drop(result: Dictionary, position: Vector2, parent: Node) -> void:
 	var scene_path: String = result["scene"]
