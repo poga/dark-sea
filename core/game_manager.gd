@@ -13,11 +13,13 @@ signal item_use_failed(item: Area2D)
 signal pickup_tween_requested(texture: Texture2D, screen_pos: Vector2, slot: int)
 signal resource_changed(type: String, new_amount: int)
 signal character_selected(id: String)
+signal character_unlocked(id: String)
 
 enum Phase { DAY, NIGHT }
 
 const INVENTORY_SIZE: int = 8
 const CHARACTERS_PATH: String = "res://data/characters.json"
+const SAVE_PATH: String = "user://save_data.json"
 
 var state: int = 0
 var current_phase: Phase = Phase.DAY
@@ -25,6 +27,7 @@ var gold: int = 0
 var resources: Dictionary = {}
 var characters: Dictionary = {}
 var selected_character: String = ""
+var _unlocked_overrides: Array[String] = []
 var inventory: Array[Area2D] = []
 var active_slot: int = 0
 var _player: CharacterBody2D
@@ -99,6 +102,7 @@ func load_characters() -> void:
 		push_error("GameManager: JSON parse error in %s: %s" % [CHARACTERS_PATH, json.get_error_message()])
 		return
 	characters = json.data
+	_load_unlocks()
 
 func set_character(id: String) -> void:
 	if not characters.has(id):
@@ -111,6 +115,48 @@ func get_character() -> Dictionary:
 	if selected_character == "" or not characters.has(selected_character):
 		return {}
 	return characters[selected_character]
+
+func is_character_unlocked(id: String) -> bool:
+	if _unlocked_overrides.has(id):
+		return true
+	if not characters.has(id):
+		return false
+	return not characters[id].get("locked", false)
+
+func unlock_character(id: String) -> void:
+	if not _unlocked_overrides.has(id):
+		_unlocked_overrides.append(id)
+		_save_unlocks()
+	character_unlocked.emit(id)
+
+func get_unlocked_characters() -> Array:
+	var result: Array = []
+	for id: String in characters:
+		if is_character_unlocked(id):
+			result.append(id)
+	return result
+
+func _save_unlocks() -> void:
+	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	if file == null:
+		push_error("GameManager: Could not write %s" % SAVE_PATH)
+		return
+	var data: Dictionary = {"unlocked_characters": _unlocked_overrides}
+	file.store_string(JSON.stringify(data, "\t"))
+
+func _load_unlocks() -> void:
+	if not FileAccess.file_exists(SAVE_PATH):
+		return
+	var file := FileAccess.open(SAVE_PATH, FileAccess.READ)
+	if file == null:
+		return
+	var json := JSON.new()
+	var err: int = json.parse(file.get_as_text())
+	if err != OK:
+		return
+	var data: Dictionary = json.data
+	if data.has("unlocked_characters"):
+		_unlocked_overrides.assign(data["unlocked_characters"])
 
 # --- Inventory management ---
 
