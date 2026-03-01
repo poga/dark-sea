@@ -271,8 +271,10 @@ func drop_item_from_slot(slot: int, target_position: Vector2) -> void:
 	var item: Area2D = inventory[slot]
 	if item == null:
 		return
+	if _player == null:
+		return
 	inventory[slot] = null
-	if _player and slot == active_slot:
+	if slot == active_slot:
 		_player.get_node("HoldPosition").remove_child(item)
 	_player.get_parent().add_child(item)
 	item.global_position = target_position
