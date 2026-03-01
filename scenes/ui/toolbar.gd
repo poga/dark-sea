@@ -119,6 +119,8 @@ func _on_inventory_changed(slot: int, item: Area2D) -> void:
 		icon.texture = null
 
 func _on_active_slot_changed(_slot: int) -> void:
+	if held_slot >= 0:
+		_cancel_hold()
 	_update_active_highlight()
 
 func get_slot_center(slot: int) -> Vector2:
