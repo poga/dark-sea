@@ -99,3 +99,49 @@ func test_use_active_item_on_empty_slot_does_nothing():
 	watch_signals(GameManager)
 	GameManager.use_active_item(Vector2(100, 0))
 	assert_signal_not_emitted(GameManager, "item_use_attempted")
+
+# --- Swap slots ---
+
+func test_swap_slots_swaps_items():
+	var item_a: Area2D = _make_item()
+	var item_b: Area2D = _make_item()
+	GameManager.try_pickup(item_a)
+	GameManager.try_pickup(item_b)
+	GameManager.swap_slots(0, 1)
+	assert_eq(GameManager.inventory[0], item_b)
+	assert_eq(GameManager.inventory[1], item_a)
+
+func test_swap_slots_emits_inventory_changed_for_both():
+	var item_a: Area2D = _make_item()
+	var item_b: Area2D = _make_item()
+	GameManager.try_pickup(item_a)
+	GameManager.try_pickup(item_b)
+	watch_signals(GameManager)
+	GameManager.swap_slots(0, 1)
+	assert_signal_emitted_with_parameters(GameManager, "inventory_changed", [0, item_b], 0)
+
+func test_swap_slots_moves_to_empty():
+	var item: Area2D = _make_item()
+	GameManager.try_pickup(item)
+	GameManager.swap_slots(0, 3)
+	assert_null(GameManager.inventory[0])
+	assert_eq(GameManager.inventory[3], item)
+
+func test_swap_slots_with_active_slot_reparents():
+	var item_a: Area2D = _make_item()
+	var item_b: Area2D = _make_item()
+	GameManager.try_pickup(item_a)
+	GameManager.try_pickup(item_b)
+	# active_slot is 0, swap 0 and 1
+	GameManager.swap_slots(0, 1)
+	# item_b should now be in HoldPosition (it moved to active slot 0)
+	assert_eq(player.get_node("HoldPosition").get_child_count(), 1)
+	assert_eq(player.get_node("HoldPosition").get_child(0), item_b)
+
+func test_swap_same_slot_is_noop():
+	var item: Area2D = _make_item()
+	GameManager.try_pickup(item)
+	watch_signals(GameManager)
+	GameManager.swap_slots(0, 0)
+	assert_signal_not_emitted(GameManager, "inventory_changed")
+	assert_eq(GameManager.inventory[0], item)

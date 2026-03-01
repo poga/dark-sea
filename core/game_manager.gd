@@ -239,6 +239,32 @@ func switch_next() -> void:
 func switch_prev() -> void:
 	switch_slot((active_slot - 1 + INVENTORY_SIZE) % INVENTORY_SIZE)
 
+func swap_slots(a: int, b: int) -> void:
+	if a == b:
+		return
+	if a < 0 or a >= INVENTORY_SIZE or b < 0 or b >= INVENTORY_SIZE:
+		return
+	var item_a: Area2D = inventory[a]
+	var item_b: Area2D = inventory[b]
+	inventory[a] = item_b
+	inventory[b] = item_a
+	# Handle HoldPosition reparenting if active slot is involved
+	if _player:
+		var hold: Marker2D = _player.get_node("HoldPosition")
+		if a == active_slot or b == active_slot:
+			# Remove old active item from HoldPosition
+			if a == active_slot and item_a != null:
+				hold.remove_child(item_a)
+			elif b == active_slot and item_b != null:
+				hold.remove_child(item_b)
+			# Add new active item to HoldPosition
+			var new_active: Area2D = inventory[active_slot]
+			if new_active != null:
+				hold.add_child(new_active)
+				new_active.position = Vector2.ZERO
+	inventory_changed.emit(a, inventory[a])
+	inventory_changed.emit(b, inventory[b])
+
 func use_active_item(target_position: Vector2) -> void:
 	var item: Area2D = get_active_item()
 	if item == null:
