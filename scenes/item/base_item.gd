@@ -68,3 +68,20 @@ func _update_state_visuals():
 	$PickupState.visible = current_state == State.PICKUP
 	$ActiveState.visible = current_state == State.ACTIVE
 	$InventoryState.visible = current_state == State.INVENTORY
+
+# --- Swing animation ---
+
+func play_swing(facing: Vector2, on_impact: Callable) -> void:
+	is_swinging = true
+	if _swing_tween and _swing_tween.is_valid():
+		_swing_tween.kill()
+	_swing_tween = create_tween()
+	var direction: float = 1.0 if facing.x >= 0 else -1.0
+	var target_angle: float = deg_to_rad(swing_angle) * direction
+	_swing_tween.tween_property(self, "rotation", target_angle, swing_duration).set_ease(Tween.EASE_IN)
+	_swing_tween.tween_interval(0.05)
+	_swing_tween.tween_callback(on_impact)
+	_swing_tween.tween_callback(func():
+		rotation = 0.0
+		is_swinging = false
+	)
