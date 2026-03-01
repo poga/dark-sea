@@ -7,6 +7,9 @@ func before_each():
 	player = preload("res://scenes/player/player.tscn").instantiate()
 	add_child_autofree(player)
 	GameManager.register_player(player)
+	# Attach lookahead script so tests work independently of .tscn wiring
+	var camera: Camera2D = player.get_node("Camera2D")
+	camera.set_script(preload("res://scenes/player/camera_lookahead.gd"))
 
 func _get_camera() -> Camera2D:
 	return player.get_node("Camera2D")
