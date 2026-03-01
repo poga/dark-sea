@@ -90,6 +90,7 @@ func _try_pick_up(slot: int) -> void:
 	held_slot = slot
 	_cursor_icon.texture = _icons[slot].texture
 	_cursor_icon.visible = true
+	_cursor_icon.global_position = get_global_mouse_position() - _cursor_icon.size / 2.0
 	_icons[slot].texture = null
 
 func _place_in_slot(target: int) -> void:
