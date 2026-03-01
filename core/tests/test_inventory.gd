@@ -145,3 +145,41 @@ func test_swap_same_slot_is_noop():
 	GameManager.swap_slots(0, 0)
 	assert_signal_not_emitted(GameManager, "inventory_changed")
 	assert_eq(GameManager.inventory[0], item)
+
+# --- Drop item from slot ---
+
+func test_drop_item_from_slot_removes_from_inventory():
+	var item: Area2D = _make_item()
+	GameManager.try_pickup(item)
+	GameManager.drop_item_from_slot(0, Vector2(200, 0))
+	assert_null(GameManager.inventory[0])
+
+func test_drop_item_from_slot_emits_inventory_changed():
+	var item: Area2D = _make_item()
+	GameManager.try_pickup(item)
+	watch_signals(GameManager)
+	GameManager.drop_item_from_slot(0, Vector2(200, 0))
+	assert_signal_emitted_with_parameters(GameManager, "inventory_changed", [0, null])
+
+func test_drop_item_from_slot_sets_pickup_state():
+	var item: Area2D = _make_item()
+	GameManager.try_pickup(item)
+	GameManager.drop_item_from_slot(0, Vector2(200, 0))
+	assert_eq(item.current_state, item.State.PICKUP)
+
+func test_drop_item_from_slot_positions_item():
+	var item: Area2D = _make_item()
+	GameManager.try_pickup(item)
+	GameManager.drop_item_from_slot(0, Vector2(200, 100))
+	assert_eq(item.global_position, Vector2(200, 100))
+
+func test_drop_item_from_slot_on_empty_is_noop():
+	watch_signals(GameManager)
+	GameManager.drop_item_from_slot(0, Vector2(200, 0))
+	assert_signal_not_emitted(GameManager, "inventory_changed")
+
+func test_drop_item_from_active_slot_removes_from_hold():
+	var item: Area2D = _make_item()
+	GameManager.try_pickup(item)
+	GameManager.drop_item_from_slot(0, Vector2(200, 0))
+	assert_eq(player.get_node("HoldPosition").get_child_count(), 0)

@@ -265,6 +265,20 @@ func swap_slots(a: int, b: int) -> void:
 	inventory_changed.emit(a, inventory[a])
 	inventory_changed.emit(b, inventory[b])
 
+func drop_item_from_slot(slot: int, target_position: Vector2) -> void:
+	if slot < 0 or slot >= INVENTORY_SIZE:
+		return
+	var item: Area2D = inventory[slot]
+	if item == null:
+		return
+	inventory[slot] = null
+	if _player and slot == active_slot:
+		_player.get_node("HoldPosition").remove_child(item)
+	_player.get_parent().add_child(item)
+	item.global_position = target_position
+	item.drop_as_pickup()
+	inventory_changed.emit(slot, null)
+
 func use_active_item(target_position: Vector2) -> void:
 	var item: Area2D = get_active_item()
 	if item == null:
