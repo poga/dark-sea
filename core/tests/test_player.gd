@@ -34,13 +34,15 @@ func test_update_facing_preserves_direction_on_zero_input():
 
 func test_get_drop_position_uses_facing_direction():
 	player.facing_direction = Vector2.RIGHT
-	var expected: Vector2 = player.global_position + Vector2.RIGHT * player.drop_distance
+	var radius: float = player.get_node("PickupZone/CollisionShape2D").shape.radius
+	var expected: Vector2 = player.global_position + Vector2.RIGHT * (radius + player.drop_margin)
 	assert_eq(player.get_drop_position(), expected)
 
 func test_get_drop_position_diagonal():
 	var dir: Vector2 = Vector2(1, 1).normalized()
 	player.facing_direction = dir
-	var expected: Vector2 = player.global_position + dir * player.drop_distance
+	var radius: float = player.get_node("PickupZone/CollisionShape2D").shape.radius
+	var expected: Vector2 = player.global_position + dir * (radius + player.drop_margin)
 	assert_almost_eq(player.get_drop_position(), expected, Vector2(0.001, 0.001))
 
 # --- Auto-pickup delegation ---

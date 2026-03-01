@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 @export var speed: float = 200.0
-@export var drop_distance: float = 80.0
+@export var drop_margin: float = 30.0
 
 var facing_direction: Vector2 = Vector2.RIGHT
 var _items_in_range: Array[Area2D] = []
@@ -67,7 +67,8 @@ func _unhandled_input(event: InputEvent):
 		GameManager.switch_prev()
 
 func get_drop_position() -> Vector2:
-	return global_position + facing_direction * drop_distance
+	var radius: float = $PickupZone/CollisionShape2D.shape.radius
+	return global_position + facing_direction * (radius + drop_margin)
 
 func switch_to_slot(slot: int) -> void:
 	GameManager.switch_slot(slot)
