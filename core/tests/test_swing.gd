@@ -11,10 +11,10 @@ func test_is_swinging_false_by_default():
 	assert_false(item.is_swinging)
 
 func test_swing_duration_default():
-	assert_eq(item.swing_duration, 0.3)
+	assert_eq(item.swing_duration, 0.1)
 
-func test_swing_angle_default():
-	assert_eq(item.swing_angle, 45.0)
+func test_swing_distance_default():
+	assert_eq(item.swing_distance, 60.0)
 
 func test_play_swing_sets_is_swinging():
 	var called := false

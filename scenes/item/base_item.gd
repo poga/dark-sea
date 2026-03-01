@@ -9,8 +9,8 @@ enum UseResult { NOTHING, KEEP, CONSUME, PLACE }
 
 @export var item_name: String = "Item"
 @export var inventory_icon: Texture2D
-@export var swing_duration: float = 0.3
-@export var swing_angle: float = 45.0
+@export var swing_duration: float = 0.1
+@export var swing_distance: float = 60.0
 
 var is_swinging: bool = false
 var _swing_tween: Tween
@@ -76,12 +76,9 @@ func play_swing(facing: Vector2, on_impact: Callable) -> void:
 	if _swing_tween and _swing_tween.is_valid():
 		_swing_tween.kill()
 	_swing_tween = create_tween()
-	var direction: float = 1.0 if facing.x >= 0 else -1.0
-	var target_angle: float = deg_to_rad(swing_angle) * direction
-	_swing_tween.tween_property(self, "rotation", target_angle, swing_duration).set_ease(Tween.EASE_IN)
-	_swing_tween.tween_interval(0.05)
+	var side: float = 1.0 if facing.x >= 0 else -1.0
+	var target_pos: Vector2 = Vector2(side * swing_distance, swing_distance)
+	_swing_tween.tween_property(self, "position", target_pos, swing_duration).set_ease(Tween.EASE_OUT)
+	_swing_tween.tween_callback(func(): position = Vector2.ZERO)
 	_swing_tween.tween_callback(on_impact)
-	_swing_tween.tween_callback(func():
-		rotation = 0.0
-		is_swinging = false
-	)
+	_swing_tween.tween_callback(func(): is_swinging = false)
