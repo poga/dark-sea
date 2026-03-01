@@ -3,15 +3,12 @@ extends HBoxContainer
 var _slots: Array[PanelContainer] = []
 var _icons: Array[TextureRect] = []
 var held_slot: int = -1
-var _cursor_layer: CanvasLayer
-var _cursor_icon: TextureRect
 
 func _ready():
 	mouse_filter = Control.MOUSE_FILTER_PASS
 	GameManager.inventory_changed.connect(_on_inventory_changed)
 	GameManager.active_slot_changed.connect(_on_active_slot_changed)
 	_build_slots()
-	_build_cursor_icon()
 	_update_active_highlight()
 
 func _build_slots() -> void:
@@ -41,22 +38,6 @@ func _build_slots() -> void:
 		_slots.append(panel)
 		_icons.append(icon)
 
-func _build_cursor_icon() -> void:
-	_cursor_layer = CanvasLayer.new()
-	_cursor_layer.layer = 100
-	add_child(_cursor_layer)
-	_cursor_icon = TextureRect.new()
-	_cursor_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_cursor_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_cursor_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	_cursor_icon.custom_minimum_size = Vector2(32, 32)
-	_cursor_icon.modulate = Color(1, 1, 1, 0.8)
-	_cursor_icon.visible = false
-	_cursor_layer.add_child(_cursor_icon)
-
-func _process(_delta: float) -> void:
-	if held_slot >= 0:
-		_cursor_icon.global_position = get_global_mouse_position() - _cursor_icon.size / 2.0
 
 func _on_slot_gui_input(event: InputEvent, slot: int) -> void:
 	if not event is InputEventMouseButton:
@@ -88,9 +69,8 @@ func _try_pick_up(slot: int) -> void:
 	if GameManager.inventory[slot] == null:
 		return
 	held_slot = slot
-	_cursor_icon.texture = _icons[slot].texture
-	_cursor_icon.visible = true
-	_cursor_icon.global_position = get_global_mouse_position() - _cursor_icon.size / 2.0
+	var texture: Texture2D = _icons[slot].texture
+	Input.set_custom_mouse_cursor(texture, Input.CURSOR_ARROW, texture.get_size() / 2.0)
 	_icons[slot].texture = null
 
 func _place_in_slot(target: int) -> void:
@@ -110,7 +90,7 @@ func _cancel_hold() -> void:
 		if item != null and item.inventory_icon != null:
 			_icons[held_slot].texture = item.inventory_icon
 	held_slot = -1
-	_cursor_icon.visible = false
+	Input.set_custom_mouse_cursor(null)
 
 func _on_inventory_changed(slot: int, item: Area2D) -> void:
 	var icon: TextureRect = _icons[slot]
