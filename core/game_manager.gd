@@ -243,6 +243,8 @@ func use_active_item(target_position: Vector2) -> void:
 	var item: Area2D = get_active_item()
 	if item == null:
 		return
+	if item.is_swinging:
+		return
 	item_use_attempted.emit(item)
 	var context: Dictionary = {
 		"target_position": target_position,
@@ -251,6 +253,10 @@ func use_active_item(target_position: Vector2) -> void:
 	if not item.can_use(context):
 		item_use_failed.emit(item)
 		return
+	var facing: Vector2 = _player.facing_direction if _player else Vector2.RIGHT
+	item.play_swing(facing, func(): _apply_item_use(item, context))
+
+func _apply_item_use(item: Area2D, context: Dictionary) -> void:
 	var result: int = item.use(context)
 	if result == item.UseResult.NOTHING:
 		item_use_failed.emit(item)
@@ -269,7 +275,7 @@ func use_active_item(target_position: Vector2) -> void:
 			if _player:
 				_player.get_node("HoldPosition").remove_child(item)
 				_player.get_parent().add_child(item)
-			item.global_position = target_position
+			item.global_position = context.target_position
 			item.activate()
 			inventory_changed.emit(active_slot, null)
 	item_used.emit(item, result)
