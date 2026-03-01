@@ -1,7 +1,7 @@
 extends Camera2D
 
-@export var lookahead_distance: float = 60.0
-@export var lookahead_smoothing: float = 3.0
+@export var lookahead_distance: float = 30.0
+@export var lookahead_smoothing: float = 1.5
 
 func _process(delta: float) -> void:
 	var player: CharacterBody2D = get_parent() as CharacterBody2D
