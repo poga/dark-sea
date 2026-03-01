@@ -9,6 +9,11 @@ enum UseResult { NOTHING, KEEP, CONSUME, PLACE }
 
 @export var item_name: String = "Item"
 @export var inventory_icon: Texture2D
+@export var swing_duration: float = 0.3
+@export var swing_angle: float = 45.0
+
+var is_swinging: bool = false
+var _swing_tween: Tween
 
 var current_state: State = State.PICKUP
 
