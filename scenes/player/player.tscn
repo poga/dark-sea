@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scenes/player/player.gd" id="1"]
 [ext_resource type="Texture2D" path="res://icon.svg" id="2"]
 [ext_resource type="Script" path="res://scenes/player/drop_preview.gd" id="3"]
+[ext_resource type="Script" path="res://scenes/player/camera_lookahead.gd" id="4"]
 
 [sub_resource type="RectangleShape2D" id="SubResource_1"]
 size = Vector2(32, 32)
@@ -37,6 +38,7 @@ shape = SubResource("SubResource_2")
 position = Vector2(0, -60)
 
 [node name="Camera2D" type="Camera2D" parent="."]
+script = ExtResource("4")
 position_smoothing_enabled = true
 position_smoothing_speed = 5.0
 

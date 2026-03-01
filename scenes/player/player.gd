@@ -1,7 +1,6 @@
 extends CharacterBody2D
 
 @export var speed: float = 200.0
-@export var camera_smoothing_speed: float = 5.0
 @export var drop_distance: float = 80.0
 
 var facing_direction: Vector2 = Vector2.RIGHT
@@ -10,7 +9,6 @@ var _items_in_range: Array[Area2D] = []
 func _ready():
 	GameManager.register_player(self)
 	_apply_character_data()
-	$Camera2D.position_smoothing_speed = camera_smoothing_speed
 	$PickupZone.area_entered.connect(_on_pickup_zone_area_entered)
 	$PickupZone.area_exited.connect(_on_pickup_zone_area_exited)
 
